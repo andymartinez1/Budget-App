@@ -8,14 +8,13 @@
 <h2>Transaction History</h2>
 
 <p>
-    <a buton class="btn btn-primary" asp-action="Create">Create New</a>
+    <a buton class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal" onclick="showDetailsModal()">Create New</a>
 </p>
 
 <form asp-controller="Transaction" asp-action="Index" method="get">
     <p>
-
-        <select asp-for="TransactionCategory" asp-items="Model.TransactionCategory">
-            <option value="">All</option>
+        <select asp-for="TransactionCategory" asp-items="Model.TransactionCategories">
+            <option value="">All Categories</option>
         </select>
 
         <label>Transaction: <input type="text" asp-for="SearchString"/></label>
@@ -67,10 +66,16 @@
             </td>
             <td>
                 <a class="btn btn-info" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                <a class="btn btn-success" asp-action="Details" asp-route-id="@item.Id">Details</a>
+                <a class="btn btn-success" data-bs-toggle="modal" data-bs-target="#detailModal" onclick="showDetailsModal(@item.Id)">Details</a>
                 <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>
         </tr>
     }
     </tbody>
 </table>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_Details", Model.Transaction); }
+    @{ await Html.RenderPartialAsync("_Create", Model.Transaction); }
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

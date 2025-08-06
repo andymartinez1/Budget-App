@@ -16,56 +16,68 @@ namespace BudgetApp.Controllers
         }
 
         // GET: TransactionController
-        public async Task<ActionResult> Index(string transactionCategory, string searchString)
+        public async Task<ActionResult> Index(string searchString)
         {
             if (_context.Transactions == null)
                 return Problem("Entity set is null");
 
-            var transactionQuery = _context.Transactions.Include(t => t.Category).AsQueryable();
-
-            var transactions = await transactionQuery.ToListAsync();
+            var transactions = await _context.Transactions.ToListAsync();
             var categories = await _context.Categories.ToListAsync();
+            var category = categories.Select(c => c.Type);
+
             var transactionVM = new TransactionViewModel
             {
                 Transactions = transactions,
                 Categories = categories,
-                TransactionCategory = new SelectList(
+                TransactionCategories = new SelectList(
                     categories
                         .Select(c => new SelectListItem { Value = c.Id.ToString(), Text = c.Type })
                         .ToList(),
                     "Value",
                     "Text"
                 ),
+                TransactionCategory = category.ToString(),
                 SearchString = searchString,
             };
             return View(transactionVM);
         }
 
-        // GET: TransactionController/Details/5
-        public ActionResult Details(int id)
+        public async Task<ActionResult> TransactionDetails(int id)
         {
-            return View();
+            if (id == null)
+                return NotFound();
+
+            var transactionDetails = await _context.Transactions.FirstOrDefaultAsync(t =>
+                t.Id == id
+            );
+            if (transactionDetails == null)
+                return NotFound();
+
+            return PartialView("_Details", transactionDetails);
         }
 
         // GET: TransactionController/Create
+        [HttpGet]
         public ActionResult Create()
         {
-            return View();
+            return PartialView("_Create");
         }
 
         // POST: TransactionController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Transaction transaction)
         {
-            try
+            var newTransaction = new Transaction
             {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+                Name = transaction.Name,
+                Description = transaction.Description,
+                Amount = transaction.Amount,
+                Category = transaction.Category,
+                Date = transaction.Date,
+            };
+
+            return PartialView("_Create", newTransaction);
         }
 
         // GET: TransactionController/Edit/5

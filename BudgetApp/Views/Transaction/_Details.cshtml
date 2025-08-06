@@ -1,0 +1,49 @@
+﻿@model Transaction
+
+<div class="modal fade" tabindex="-1" role="dialog" id="detailModal" aria-labelledby="detailModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="detailModalLabel">Transaction Details</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <dl>
+                    <dt>
+                        @Html.DisplayNameFor(t => t.Name)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(t => t.Name)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(t => t.Description)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(t => t.Description)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(t => t.Category.Type)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(t => t.Category.Type)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(t => t.Amount)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(t => t.Amount)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(t => t.Date)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(t => t.Date)
+                    </dd>
+                </dl>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
