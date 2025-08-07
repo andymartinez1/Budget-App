@@ -1,81 +1,85 @@
 @model BudgetApp.Models.TransactionViewModel
 
 @{
-    ViewData["Title"] = "Transactions";
-    Layout = "_Layout";
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Transaction History</h2>
+<div id="indexPage">
+    <h2>Transaction History</h2>
 
-<p>
-    <a buton class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal" onclick="showDetailsModal()">Create New</a>
-</p>
-
-<form asp-controller="Transaction" asp-action="Index" method="get">
     <p>
-        <select asp-for="TransactionCategory" asp-items="Model.TransactionCategories">
-            <option value="">All Categories</option>
-        </select>
-
-        <label>Transaction: <input type="text" asp-for="SearchString"/></label>
-        <input type="submit" value="Filter"/>
+        <a buton class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">Create New</a>
     </p>
-</form>
 
-<table class="table table-striped table-dark table-hover">
-    <thead>
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Transactions[0].Date)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Transactions[0].Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Transactions[0].Description)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Transactions[0].Category.Type)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Transactions[0].Amount)
-        </th>
-        <th>
-            Actions
-        </th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach(var item in Model.Transactions!)
-    {
+    <form asp-controller="Transaction" asp-action="Index" method="get">
+        <p>
+            <select asp-for="TransactionCategory" asp-items="Model.TransactionCategories">
+                <option value="">All Categories</option>
+            </select>
+
+            <label>Transaction: <input type="text" asp-for="SearchString"/></label>
+            <input type="submit" value="Filter"/>
+        </p>
+    </form>
+
+    <table class="table table-striped table-dark table-hover">
+        <thead>
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Date)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category.Type)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Amount)
-            </td>
-            <td>
-                <a class="btn btn-info" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                <a class="btn btn-success" data-bs-toggle="modal" data-bs-target="#detailModal" onclick="showDetailsModal(@item.Id)">Details</a>
-                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
+            <th>
+                @Html.DisplayNameFor(model => model.Transactions[0].Date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Transactions[0].Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Transactions[0].Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Transactions[0].Category.Type)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Transactions[0].Amount)
+            </th>
+            <th>
+                Actions
+            </th>
         </tr>
-    }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+        @foreach (var transaction in Model.Transactions)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => transaction.Date)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => transaction.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => transaction.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => transaction.Category.Type)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => transaction.Amount)
+                </td>
+                <td>
+                    <a class="btn btn-info" asp-action="Edit" asp-route-id="@transaction.Id">Edit</a>
+                    <a class="btn btn-success" data-bs-toggle="modal" data-bs-target="#detailModal"
+                       onclick="loadTransactionDetails(@transaction.Id)" asp-action="DetailsPartial"
+                       asp-route-id="@transaction.Id">Details</a>
+                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@transaction.Id">Delete</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
 
 @section Scripts {
-    @{ await Html.RenderPartialAsync("_Details", Model.Transaction); }
-    @{ await Html.RenderPartialAsync("_Create", Model.Transaction); }
-    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{ await Html.RenderPartialAsync("_DetailsModalPartial", Model.Transaction); }
+    @{ await Html.RenderPartialAsync("_CreateModalPartial", Model.Transaction); }
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }

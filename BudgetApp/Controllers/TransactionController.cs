@@ -15,8 +15,8 @@ namespace BudgetApp.Controllers
             _context = context;
         }
 
-        // GET: TransactionController
-        public async Task<ActionResult> Index(string searchString)
+        // GET: Transaction
+        public async Task<IActionResult> Index(string searchString)
         {
             if (_context.Transactions == null)
                 return Problem("Entity set is null");
@@ -25,7 +25,7 @@ namespace BudgetApp.Controllers
             var categories = await _context.Categories.ToListAsync();
             var category = categories.Select(c => c.Type);
 
-            var transactionVM = new TransactionViewModel
+            var transactionVm = new TransactionViewModel
             {
                 Transactions = transactions,
                 Categories = categories,
@@ -39,87 +39,164 @@ namespace BudgetApp.Controllers
                 TransactionCategory = category.ToString(),
                 SearchString = searchString,
             };
-            return View(transactionVM);
+            return View(transactionVm);
         }
 
-        public async Task<ActionResult> TransactionDetails(int id)
+        // GET: Transaction/DetailsPartial/5
+        public async Task<IActionResult> DetailsPartial(int id)
+        {
+            var transaction = await _context
+                .Transactions.Include(t => t.Category)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (transaction == null)
+            {
+                return NotFound();
+            }
+
+            return PartialView("_DetailsModalPartial", transaction);
+        }
+
+        // GET: Transaction/Create
+        public IActionResult Create()
+        {
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id");
+            return PartialView("_CreateModalPartial");
+        }
+
+        // POST: Transaction/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(
+            [Bind("Id,Date,Name,Description,CategoryId,Amount")]
+            Transaction transaction
+        )
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(transaction);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+
+            ViewData["CategoryId"] = new SelectList(
+                _context.Categories,
+                "Id",
+                "Id",
+                transaction.CategoryId
+            );
+            return PartialView("_CreateModalPartial", transaction);
+        }
+
+        // GET: Transaction/Edit/5
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
+            {
                 return NotFound();
+            }
 
-            var transactionDetails = await _context.Transactions.FirstOrDefaultAsync(t =>
-                t.Id == id
+            var transaction = await _context.Transactions.FindAsync(id);
+            if (transaction == null)
+            {
+                return NotFound();
+            }
+
+            ViewData["CategoryId"] = new SelectList(
+                _context.Categories,
+                "Id",
+                "Id",
+                transaction.CategoryId
             );
-            if (transactionDetails == null)
+            return View(transaction);
+        }
+
+        // POST: Transaction/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(
+            int id,
+            [Bind("Id,Date,Name,Description,CategoryId,Amount")]
+            Transaction transaction
+        )
+        {
+            if (id != transaction.Id)
+            {
                 return NotFound();
+            }
 
-            return PartialView("_Details", transactionDetails);
-        }
-
-        // GET: TransactionController/Create
-        [HttpGet]
-        public ActionResult Create()
-        {
-            return PartialView("_Create");
-        }
-
-        // POST: TransactionController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(Transaction transaction)
-        {
-            var newTransaction = new Transaction
+            if (ModelState.IsValid)
             {
-                Name = transaction.Name,
-                Description = transaction.Description,
-                Amount = transaction.Amount,
-                Category = transaction.Category,
-                Date = transaction.Date,
-            };
+                try
+                {
+                    _context.Update(transaction);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!TransactionExists(transaction.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
 
-            return PartialView("_Create", newTransaction);
-        }
-
-        // GET: TransactionController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: TransactionController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
                 return RedirectToAction(nameof(Index));
             }
-            catch
-            {
-                return View();
-            }
+
+            ViewData["CategoryId"] = new SelectList(
+                _context.Categories,
+                "Id",
+                "Id",
+                transaction.CategoryId
+            );
+            return View(transaction);
         }
 
-        // GET: TransactionController/Delete/5
-        public ActionResult Delete(int id)
+        // GET: Transaction/Delete/5
+        public async Task<IActionResult> Delete(int? id)
         {
-            return View();
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var transaction = await _context
+                .Transactions.Include(t => t.Category)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (transaction == null)
+            {
+                return NotFound();
+            }
+
+            return View(transaction);
         }
 
-        // POST: TransactionController/Delete/5
-        [HttpPost]
+        // POST: Transaction/Delete/5
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            try
+            var transaction = await _context.Transactions.FindAsync(id);
+            if (transaction != null)
             {
-                return RedirectToAction(nameof(Index));
+                _context.Transactions.Remove(transaction);
             }
-            catch
-            {
-                return View();
-            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool TransactionExists(int id)
+        {
+            return _context.Transactions.Any(e => e.Id == id);
         }
     }
 }
