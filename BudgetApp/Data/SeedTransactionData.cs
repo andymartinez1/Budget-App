@@ -21,7 +21,7 @@ public static class SeedTransactionData
                 new Transaction
                 {
                     Date = DateTime.Now,
-                    Name = "paycheck",
+                    Name = "Paycheck",
                     Description = "Pay from XYZ company",
                     Amount = 890.20m,
                     CategoryId = 1,

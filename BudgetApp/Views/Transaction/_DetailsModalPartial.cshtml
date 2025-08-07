@@ -1,6 +1,11 @@
-﻿@model Transaction
+@model Transaction
 
-<div class="modal fade" tabindex="-1" role="dialog" id="detailModal" aria-labelledby="detailModalLabel" aria-hidden="true">
+@{
+    ViewData["Title"] = "DetailsPartial";
+}
+
+<div class="modal fade" tabindex="-1" role="dialog" id="detailModal" aria-labelledby="detailModalLabel"
+     aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -42,7 +47,7 @@
                 </dl>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

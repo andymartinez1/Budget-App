@@ -20,5 +20,8 @@
   <ItemGroup>
     <_ContentIncludedByDefault Remove="Views\Home\Index.cshtml" />
     <_ContentIncludedByDefault Remove="Views\Home\Privacy.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\TransactionOld\Index.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\TransactionOld\_Create.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\TransactionOld\_Details.cshtml" />
   </ItemGroup>
 </Project>
