@@ -32,7 +32,7 @@ app.UseRouting();
 
 app.MapStaticAssets();
 
-app.MapControllerRoute(name: "default", pattern: "{controller=Transaction}/{action=Index}/{id?}")
+app.MapControllerRoute("default", "{controller=Transaction}/{action=Index}/{id?}")
     .WithStaticAssets();
 
 app.Run();

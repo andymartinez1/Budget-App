@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using BudgetApp.Models;
+﻿using BudgetApp.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace BudgetApp.Data;

@@ -6,19 +6,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BudgetApp.Controllers;
 
-public class TransactionController : Controller
+public class CategoryController : Controller
 {
     private readonly BudgetDbContext _context;
 
-    public TransactionController(BudgetDbContext context)
+    public CategoryController(BudgetDbContext context)
     {
         _context = context;
     }
 
-    // GET: Transaction
+    // GET: Category
     public async Task<IActionResult> Index(string searchString)
     {
-        if (_context.Transactions == null)
+        if (_context.Categories == null)
             return Problem("Entity set is null");
 
         var transactions = await _context.Transactions.ToListAsync();
@@ -42,93 +42,75 @@ public class TransactionController : Controller
         return View(transactionVm);
     }
 
-    // GET: Transaction/DetailsPartial/5
-    public async Task<IActionResult> DetailsPartial(int id)
+    // GET: Category/Details/5
+    public async Task<IActionResult> Details(int? id)
     {
-        var transaction = await _context
-            .Transactions.Include(t => t.Category)
-            .FirstOrDefaultAsync(m => m.Id == id);
-
-        if (transaction == null)
+        if (id == null)
             return NotFound();
 
-        return PartialView("_DetailsModalPartial", transaction);
+        var category = await _context.Categories.FirstOrDefaultAsync(m => m.Id == id);
+        if (category == null)
+            return NotFound();
+
+        return View(category);
     }
 
-    // GET: Transaction/Create
+    // GET: Category/Create
     public IActionResult Create()
     {
-        ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id");
-        return PartialView("_CreateModalPartial");
+        return View();
     }
 
-    // POST: Transaction/Create
+    // POST: Category/Create
     // To protect from overposting attacks, enable the specific properties you want to bind to.
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(
-        [Bind("Id,Date,Name,Description,CategoryId,Amount")] Transaction transaction
-    )
+    public async Task<IActionResult> Create([Bind("Id,Type")] Category category)
     {
         if (ModelState.IsValid)
         {
-            _context.Add(transaction);
+            _context.Add(category);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        ViewData["CategoryId"] = new SelectList(
-            _context.Categories,
-            "Id",
-            "Id",
-            transaction.CategoryId
-        );
-        return PartialView("_CreateModalPartial", transaction);
+        return View(category);
     }
 
-    // GET: Transaction/Edit/5
+    // GET: Category/Edit/5
     public async Task<IActionResult> Edit(int? id)
     {
         if (id == null)
             return NotFound();
 
-        var transaction = await _context.Transactions.FindAsync(id);
-        if (transaction == null)
+        var category = await _context.Categories.FindAsync(id);
+        if (category == null)
             return NotFound();
 
-        ViewData["CategoryId"] = new SelectList(
-            _context.Categories,
-            "Id",
-            "Id",
-            transaction.CategoryId
-        );
-        return View(transaction);
+        return View(category);
     }
 
-    // POST: Transaction/Edit/5
+    // POST: Category/Edit/5
     // To protect from overposting attacks, enable the specific properties you want to bind to.
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(
-        int id,
-        [Bind("Id,Date,Name,Description,CategoryId,Amount")] Transaction transaction
-    )
+    public async Task<IActionResult> Edit(int id, [Bind("Id,Type")] Category category)
     {
-        if (id != transaction.Id)
+        if (id != category.Id)
             return NotFound();
 
         if (ModelState.IsValid)
         {
             try
             {
-                _context.Update(transaction);
+                _context.Update(category);
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!TransactionExists(transaction.Id))
+                if (!CategoryExists(category.Id))
                     return NotFound();
 
                 throw;
@@ -137,46 +119,38 @@ public class TransactionController : Controller
             return RedirectToAction(nameof(Index));
         }
 
-        ViewData["CategoryId"] = new SelectList(
-            _context.Categories,
-            "Id",
-            "Id",
-            transaction.CategoryId
-        );
-        return View(transaction);
+        return View(category);
     }
 
-    // GET: Transaction/Delete/5
+    // GET: Category/Delete/5
     public async Task<IActionResult> Delete(int? id)
     {
         if (id == null)
             return NotFound();
 
-        var transaction = await _context
-            .Transactions.Include(t => t.Category)
-            .FirstOrDefaultAsync(m => m.Id == id);
-        if (transaction == null)
+        var category = await _context.Categories.FirstOrDefaultAsync(m => m.Id == id);
+        if (category == null)
             return NotFound();
 
-        return View(transaction);
+        return View(category);
     }
 
-    // POST: Transaction/Delete/5
+    // POST: Category/Delete/5
     [HttpPost]
     [ActionName("Delete")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
-        var transaction = await _context.Transactions.FindAsync(id);
-        if (transaction != null)
-            _context.Transactions.Remove(transaction);
+        var category = await _context.Categories.FindAsync(id);
+        if (category != null)
+            _context.Categories.Remove(category);
 
         await _context.SaveChangesAsync();
         return RedirectToAction(nameof(Index));
     }
 
-    private bool TransactionExists(int id)
+    private bool CategoryExists(int id)
     {
-        return _context.Transactions.Any(e => e.Id == id);
+        return _context.Categories.Any(e => e.Id == id);
     }
 }
