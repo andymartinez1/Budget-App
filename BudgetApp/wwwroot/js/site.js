@@ -1,5 +1,5 @@
 ﻿$(function () {
-    function loadTransactionDetails(buttonSelector, placeholder, modalSelector) {
+    function getModalDetails(buttonSelector, placeholder, modalSelector) {
         $(document).on('click', buttonSelector, function () {
             const url = $(this).data('url');
             $.get(url, function (data) {
@@ -19,8 +19,10 @@
         })
     }
 
-    loadTransactionDetails('button[data-toggle="detail-modal"]',
+    getModalDetails('button[data-toggle="detail-modal"]',
         '#detailModalPlaceholder', '#detailModal');
 
-    editTransaction('button[data-toggle="edit-modal"]', '#editModalPlaceholder', '#editModal');
+    getModalDetails('button[data-toggle="edit-modal"]', '#editModalPlaceholder', '#editModal')
+
+    getModalDetails('button[data-toggle="delete-modal"]', '#deleteModalPlaceholder', '#deleteModal');
 });
