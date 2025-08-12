@@ -1,14 +1,26 @@
-﻿function loadTransactionDetails(id) {
-    $.ajax({
-        url: `/Transaction/DetailsPartial/${id}`,
-        method: 'GET',
-        data: {id: id},
-        success: function (data) {
-            $('#detailModal').modal('show');
-            $('#detailModal .modal-body').html(data);
-        },
-        error: function () {
-            $('#detailModal .modal-content').html('<div class="modal-body">Error loading details.</div>');
-        }
-    });
-}
+﻿$(function () {
+    function loadTransactionDetails(buttonSelector, placeholder, modalSelector) {
+        $(document).on('click', buttonSelector, function () {
+            const url = $(this).data('url');
+            $.get(url, function (data) {
+                $(placeholder).html(data);
+                $(modalSelector).modal('show');
+            })
+        })
+    }
+
+    function editTransaction(buttonSelector, placeholder, modalSelector) {
+        $(document).on('click', buttonSelector, function () {
+            const url = $(this).data('url');
+            $.get(url, function (data) {
+                $(placeholder).html(data);
+                $(modalSelector).modal('show');
+            })
+        })
+    }
+
+    loadTransactionDetails('button[data-toggle="detail-modal"]',
+        '#detailModalPlaceholder', '#detailModal');
+
+    editTransaction('button[data-toggle="edit-modal"]', '#editModalPlaceholder', '#editModal');
+});

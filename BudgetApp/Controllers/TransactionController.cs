@@ -15,7 +15,7 @@ public class TransactionController : Controller
         _context = context;
     }
 
-    // GET: Transaction
+    [HttpGet]
     public async Task<IActionResult> Index(string searchString)
     {
         if (_context.Transactions == null)
@@ -37,13 +37,13 @@ public class TransactionController : Controller
                 "Text"
             ),
             TransactionCategory = category.ToString(),
-            SearchString = searchString,
+            SearchString = searchString
         };
         return View(transactionVm);
     }
 
-    // GET: Transaction/DetailsPartial/5
-    public async Task<IActionResult> DetailsPartial(int id)
+    [HttpGet]
+    public async Task<IActionResult> Details(int id)
     {
         var transaction = await _context
             .Transactions.Include(t => t.Category)
@@ -55,20 +55,19 @@ public class TransactionController : Controller
         return PartialView("_DetailsModalPartial", transaction);
     }
 
-    // GET: Transaction/Create
+    [HttpGet]
     public IActionResult Create()
     {
         ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id");
         return PartialView("_CreateModalPartial");
     }
 
-    // POST: Transaction/Create
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(
-        [Bind("Id,Date,Name,Description,CategoryId,Amount")] Transaction transaction
+        [Bind("Id,Date,Name,Description,CategoryId,Amount")]
+        Transaction transaction
     )
     {
         if (ModelState.IsValid)
@@ -87,7 +86,7 @@ public class TransactionController : Controller
         return PartialView("_CreateModalPartial", transaction);
     }
 
-    // GET: Transaction/Edit/5
+    [HttpGet]
     public async Task<IActionResult> Edit(int? id)
     {
         if (id == null)
@@ -103,17 +102,16 @@ public class TransactionController : Controller
             "Id",
             transaction.CategoryId
         );
-        return View(transaction);
+        return PartialView("_EditModalPartial", transaction);
     }
 
-    // POST: Transaction/Edit/5
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(
         int id,
-        [Bind("Id,Date,Name,Description,CategoryId,Amount")] Transaction transaction
+        [Bind("Id,Date,Name,Description,CategoryId,Amount")]
+        Transaction transaction
     )
     {
         if (id != transaction.Id)
@@ -143,10 +141,10 @@ public class TransactionController : Controller
             "Id",
             transaction.CategoryId
         );
-        return View(transaction);
+        return PartialView("_EditModalPartial", transaction);
     }
 
-    // GET: Transaction/Delete/5
+    [HttpGet]
     public async Task<IActionResult> Delete(int? id)
     {
         if (id == null)
@@ -158,10 +156,9 @@ public class TransactionController : Controller
         if (transaction == null)
             return NotFound();
 
-        return View(transaction);
+        return PartialView("_DeleteModalPartial", transaction);
     }
 
-    // POST: Transaction/Delete/5
     [HttpPost]
     [ActionName("Delete")]
     [ValidateAntiForgeryToken]

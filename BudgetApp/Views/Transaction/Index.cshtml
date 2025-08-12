@@ -66,11 +66,13 @@
                     @Html.DisplayFor(modelItem => transaction.Amount)
                 </td>
                 <td>
-                    <a class="btn btn-info" asp-action="Edit" asp-route-id="@transaction.Id">Edit</a>
-                    <a class="btn btn-success" data-bs-toggle="modal" data-bs-target="#detailModal"
-                       onclick="loadTransactionDetails(@transaction.Id)" asp-action="DetailsPartial"
-                       asp-route-id="@transaction.Id">Details</a>
-                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@transaction.Id">Delete</a>
+                    <button class="btn btn-info" data-toggle="edit-modal" data-bs-target="#editModal"
+                            data-url="@Url.Action("Edit", "Transaction", new { id = transaction.Id })">Edit
+                    </button>
+                    <button class="btn btn-success" data-toggle="detail-modal" data-bs-target="#detailModal"
+                            data-url="@Url.Action("Details", "Transaction", new { id = transaction.Id })">Details
+                    </button>
+                    <button class="btn btn-danger" asp-action="Delete" asp-route-id="@transaction.Id">Delete</button>
                 </td>
             </tr>
         }
@@ -78,8 +80,9 @@
     </table>
 </div>
 
+<div id="detailModalPlaceholder"></div>
+<div id="editModalPlaceholder"></div>
+
 @section Scripts {
-    @{ await Html.RenderPartialAsync("_DetailsModalPartial", Model.Transaction); }
-    @{ await Html.RenderPartialAsync("_CreateModalPartial", Model.Transaction); }
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }
