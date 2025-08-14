@@ -35,11 +35,27 @@ public static class SeedTransactionData
                 },
                 new Transaction
                 {
-                    Date = DateTime.Now.AddHours(3),
+                    Date = DateTime.Now.AddHours(3.5),
                     Name = "Verizon Bill",
                     Description = "Phone bill",
                     Amount = 79.99m,
                     CategoryId = 2,
+                },
+                new Transaction
+                {
+                    Date = DateTime.Now.AddHours(24),
+                    Name = "Gift",
+                    Description = "Birthday gift from a friend",
+                    Amount = 150.00m,
+                    CategoryId = 1,
+                },
+                new Transaction
+                {
+                    Date = DateTime.Now.AddHours(26.3),
+                    Name = "Donation",
+                    Description = "Donation to charity",
+                    Amount = 200.00m,
+                    CategoryId = 3,
                 }
             );
 

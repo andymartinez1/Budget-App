@@ -9,7 +9,9 @@
     <h2>Transaction History</h2>
 
     <p>
-        <a buton class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">Create New</a>
+        <button class="btn btn-primary" data-toggle="create-modal" data-bs-target="#createModal"
+                data-url="@Url.Action("Create", "Transaction")">Create New
+        </button>
     </p>
 
     <form asp-controller="Transaction" asp-action="Index" method="get">
@@ -62,7 +64,7 @@
                 <td>
                     @Html.DisplayFor(modelItem => transaction.Category.Type)
                 </td>
-                <td>
+                <td class="@(transaction.Category.Type == "Income" ? "text-success" : "text-danger")">
                     @Html.DisplayFor(modelItem => transaction.Amount)
                 </td>
                 <td>
@@ -82,6 +84,7 @@
     </table>
 </div>
 
+<div id="createModalPlaceholder"></div>
 <div id="detailModalPlaceholder"></div>
 <div id="editModalPlaceholder"></div>
 <div id="deleteModalPlaceholder"></div>

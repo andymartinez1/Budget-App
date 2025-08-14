@@ -19,6 +19,9 @@
         })
     }
 
+    getModalDetails('button[data-toggle="create-modal"]',
+        '#createModalPlaceholder', '#createModal');
+
     getModalDetails('button[data-toggle="detail-modal"]',
         '#detailModalPlaceholder', '#detailModal');
 
