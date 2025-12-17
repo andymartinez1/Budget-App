@@ -6,10 +6,10 @@
 }
 
 <div id="indexPage">
-    <h2>Transaction History</h2>
+    <h1>Transaction History</h1>
 
     <p>
-        <button class="btn btn-primary" data-toggle="create-modal" data-bs-target="#createModal"
+        <button class="btn btn-success add-btn" data-toggle="create-modal" data-bs-target="#createModal"
                 data-url="@Url.Action("Create", "Transaction")">Create New
         </button>
     </p>
@@ -25,7 +25,7 @@
         </p>
     </form>
 
-    <table class="table table-striped table-dark table-hover">
+    <table class="table table-hover">
         <thead>
         <tr>
             <th>
@@ -64,7 +64,7 @@
                 <td>
                     @Html.DisplayFor(modelItem => transaction.Category.Type)
                 </td>
-                <td class="@(transaction.Category.Type == "Income" ? "text-success" : "text-danger")">
+                <td class="@(transaction.Amount < 0 ? "text-success" : "text-danger")">
                     @Html.DisplayFor(modelItem => transaction.Amount)
                 </td>
                 <td>
@@ -90,5 +90,6 @@
 <div id="deleteModalPlaceholder"></div>
 
 @section Scripts {
+
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }

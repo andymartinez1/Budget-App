@@ -20,12 +20,12 @@
     }
 
     getModalDetails('button[data-toggle="create-modal"]',
-        '#createModalPlaceholder', '#createModal');
+        '#upsertModalPlaceholder', '#upsertModal');
 
     getModalDetails('button[data-toggle="detail-modal"]',
         '#detailModalPlaceholder', '#detailModal');
 
-    getModalDetails('button[data-toggle="edit-modal"]', '#editModalPlaceholder', '#editModal')
+    getModalDetails('button[data-toggle="upsert-modal"]', '#upsertModalPlaceholder', '#upsertModal')
 
     getModalDetails('button[data-toggle="delete-modal"]', '#deleteModalPlaceholder', '#deleteModal');
 });

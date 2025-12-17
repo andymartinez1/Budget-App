@@ -18,8 +18,13 @@ public class SeedCategoryData
 
             context.Categories.AddRange(
                 new Category { Type = "Income" },
-                new Category { Type = "Expense" },
-                new Category { Type = "Other" }
+                new Category { Type = "Housing" },
+                new Category { Type = "Utilities" },
+                new Category { Type = "Food" },
+                new Category { Type = "Gift" },
+                new Category { Type = "Donation" },
+                new Category { Type = "Taxes" },
+                new Category { Type = "Donation" }
             );
 
             context.SaveChanges();

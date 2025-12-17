@@ -1,5 +1,6 @@
 using BudgetApp.Data;
 using BudgetApp.Models;
+using BudgetApp.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -9,10 +10,12 @@ namespace BudgetApp.Controllers;
 public class TransactionController : Controller
 {
     private readonly BudgetDbContext _context;
+    private readonly ITransactionService _service;
 
-    public TransactionController(BudgetDbContext context)
+    public TransactionController(BudgetDbContext context, ITransactionService service)
     {
         _context = context;
+        _service = service;
     }
 
     [HttpGet]
@@ -37,7 +40,7 @@ public class TransactionController : Controller
                 "Text"
             ),
             TransactionCategory = category.ToString(),
-            SearchString = searchString
+            SearchString = searchString,
         };
         return View(transactionVm);
     }
@@ -62,12 +65,10 @@ public class TransactionController : Controller
         return PartialView("_CreateModalPartial");
     }
 
-
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(
-        [Bind("Id,Date,Name,Description,CategoryId,Amount")]
-        Transaction transaction
+        [Bind("Id,Date,Name,Description,CategoryId,Amount")] Transaction transaction
     )
     {
         if (ModelState.IsValid)
@@ -105,13 +106,11 @@ public class TransactionController : Controller
         return PartialView("_EditModalPartial", transaction);
     }
 
-
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(
         int id,
-        [Bind("Id,Date,Name,Description,CategoryId,Amount")]
-        Transaction transaction
+        [Bind("Id,Date,Name,Description,CategoryId,Amount")] Transaction transaction
     )
     {
         if (id != transaction.Id)
