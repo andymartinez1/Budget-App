@@ -5,7 +5,7 @@ namespace BudgetApp.Models;
 public class Category
 {
     [Key]
-    public int Id { get; set; }
+    public int CategoryId { get; set; }
 
     public string Type { get; set; } = string.Empty;
 

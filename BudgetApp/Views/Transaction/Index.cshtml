@@ -1,4 +1,4 @@
-@model TransactionViewModel
+@model TransactionCategoryViewModel
 
 @{
     ViewData["Title"] = "Index";
@@ -9,18 +9,17 @@
     <h1>Transaction History</h1>
 
     <p>
-        <button class="btn btn-success add-btn" data-toggle="create-modal" data-bs-target="#createModal"
+        <button type="button" class="btn btn-primary" data-bs-toggle="ajax-modal" data-bs-target="#createModal"
                 data-url="@Url.Action("Create", "Transaction")">Create New
         </button>
     </p>
 
     <form asp-controller="Transaction" asp-action="Index" method="get">
         <p>
-            <select asp-for="TransactionCategory" asp-items="Model.TransactionCategories">
+            <select asp-for="FilterCategory" asp-items="Model.Categories">
                 <option value="">All Categories</option>
             </select>
-
-            <label>Transaction: <input type="text" asp-for="SearchString"/></label>
+            <label>Transaction: <input type="text" asp-for="FilterCategory"/></label>
             <input type="submit" value="Filter"/>
         </p>
     </form>
@@ -29,19 +28,16 @@
         <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Transactions[0].Date)
+                @Html.DisplayNameFor(model => model.Transactions.FirstOrDefault().Date)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Transactions[0].Name)
+                @Html.DisplayNameFor(model => model.Transactions.FirstOrDefault().Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Transactions[0].Description)
+                @Html.DisplayNameFor(model => model.Transactions.FirstOrDefault().Category)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Transactions[0].Category.Type)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Transactions[0].Amount)
+                @Html.DisplayNameFor(model => model.Transactions.FirstOrDefault().Amount)
             </th>
             <th>
                 Actions
@@ -59,12 +55,9 @@
                     @Html.DisplayFor(modelItem => transaction.Name)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => transaction.Description)
-                </td>
-                <td>
                     @Html.DisplayFor(modelItem => transaction.Category.Type)
                 </td>
-                <td class="@(transaction.Amount < 0 ? "text-success" : "text-danger")">
+                <td class="@(transaction.Amount > 0 ? "text-success" : "text-danger")">
                     @Html.DisplayFor(modelItem => transaction.Amount)
                 </td>
                 <td>

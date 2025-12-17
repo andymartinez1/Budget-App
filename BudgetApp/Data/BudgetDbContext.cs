@@ -6,9 +6,7 @@ namespace BudgetApp.Data;
 public class BudgetDbContext : DbContext
 {
     public BudgetDbContext(DbContextOptions<BudgetDbContext> options)
-        : base(options)
-    {
-    }
+        : base(options) { }
 
     public DbSet<Category> Categories { get; set; }
     public DbSet<Transaction> Transactions { get; set; }
@@ -16,10 +14,10 @@ public class BudgetDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder
-            .Entity<Category>()
-            .HasMany(c => c.Transactions)
-            .WithOne(t => t.Category)
-            .OnDelete(DeleteBehavior.Cascade)
-            .IsRequired();
+            .Entity<Transaction>()
+            .HasOne(t => t.Category)
+            .WithMany(c => c.Transactions)
+            .HasForeignKey(t => t.CategoryId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

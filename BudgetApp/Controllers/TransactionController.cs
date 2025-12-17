@@ -9,13 +9,19 @@ namespace BudgetApp.Controllers;
 
 public class TransactionController : Controller
 {
+    private readonly ICategoryService _categoryService;
     private readonly BudgetDbContext _context;
-    private readonly ITransactionService _service;
+    private readonly ITransactionService _transactionService;
 
-    public TransactionController(BudgetDbContext context, ITransactionService service)
+    public TransactionController(
+        BudgetDbContext context,
+        ITransactionService transactionService,
+        ICategoryService categoryService
+    )
     {
         _context = context;
-        _service = service;
+        _transactionService = transactionService;
+        _categoryService = categoryService;
     }
 
     [HttpGet]
@@ -24,24 +30,12 @@ public class TransactionController : Controller
         if (_context.Transactions == null)
             return Problem("Entity set is null");
 
-        var transactions = await _context.Transactions.ToListAsync();
-        var categories = await _context.Categories.ToListAsync();
+        var transactions = await _transactionService.GetAllTransactions();
+        var categories = await _categoryService.GetAllCategories();
         var category = categories.Select(c => c.Type);
 
-        var transactionVm = new TransactionViewModel
-        {
-            Transactions = transactions,
-            Categories = categories,
-            TransactionCategories = new SelectList(
-                categories
-                    .Select(c => new SelectListItem { Value = c.Id.ToString(), Text = c.Type })
-                    .ToList(),
-                "Value",
-                "Text"
-            ),
-            TransactionCategory = category.ToString(),
-            SearchString = searchString,
-        };
+        var transactionVm = new TransactionCategoryViewModel { Transactions = transactions };
+
         return View(transactionVm);
     }
 
@@ -67,23 +61,14 @@ public class TransactionController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(
-        [Bind("Id,Date,Name,Description,CategoryId,Amount")] Transaction transaction
-    )
+    public async Task<IActionResult> Create([Bind("Id,Date,Name,Amount")] Transaction transaction)
     {
         if (ModelState.IsValid)
         {
-            _context.Add(transaction);
+            _context.Transactions.Add(transaction);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
         }
 
-        ViewData["CategoryId"] = new SelectList(
-            _context.Categories,
-            "Id",
-            "Id",
-            transaction.CategoryId
-        );
         return PartialView("_CreateModalPartial", transaction);
     }
 
@@ -174,5 +159,12 @@ public class TransactionController : Controller
     private bool TransactionExists(int id)
     {
         return _context.Transactions.Any(e => e.Id == id);
+    }
+
+    private async Task<IEnumerable<CategoryViewModel>> GetCategoriesAsync()
+    {
+        var categories = await _categoryService.GetAllCategories();
+
+        return categories.Select(c => new CategoryViewModel());
     }
 }

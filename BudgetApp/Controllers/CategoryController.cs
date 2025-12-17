@@ -1,7 +1,6 @@
 using BudgetApp.Data;
 using BudgetApp.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace BudgetApp.Controllers;
@@ -25,20 +24,7 @@ public class CategoryController : Controller
         var categories = await _context.Categories.ToListAsync();
         var category = categories.Select(c => c.Type);
 
-        var transactionVm = new TransactionViewModel
-        {
-            Transactions = transactions,
-            Categories = categories,
-            TransactionCategories = new SelectList(
-                categories
-                    .Select(c => new SelectListItem { Value = c.Id.ToString(), Text = c.Type })
-                    .ToList(),
-                "Value",
-                "Text"
-            ),
-            TransactionCategory = category.ToString(),
-            SearchString = searchString,
-        };
+        var transactionVm = new TransactionViewModel();
         return View(transactionVm);
     }
 
@@ -48,7 +34,7 @@ public class CategoryController : Controller
         if (id == null)
             return NotFound();
 
-        var category = await _context.Categories.FirstOrDefaultAsync(m => m.Id == id);
+        var category = await _context.Categories.FirstOrDefaultAsync(m => m.CategoryId == id);
         if (category == null)
             return NotFound();
 
@@ -98,7 +84,7 @@ public class CategoryController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(int id, [Bind("Id,Type")] Category category)
     {
-        if (id != category.Id)
+        if (id != category.CategoryId)
             return NotFound();
 
         if (ModelState.IsValid)
@@ -110,7 +96,7 @@ public class CategoryController : Controller
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CategoryExists(category.Id))
+                if (!CategoryExists(category.CategoryId))
                     return NotFound();
 
                 throw;
@@ -128,7 +114,7 @@ public class CategoryController : Controller
         if (id == null)
             return NotFound();
 
-        var category = await _context.Categories.FirstOrDefaultAsync(m => m.Id == id);
+        var category = await _context.Categories.FirstOrDefaultAsync(m => m.CategoryId == id);
         if (category == null)
             return NotFound();
 
@@ -151,6 +137,6 @@ public class CategoryController : Controller
 
     private bool CategoryExists(int id)
     {
-        return _context.Categories.Any(e => e.Id == id);
+        return _context.Categories.Any(e => e.CategoryId == id);
     }
 }
