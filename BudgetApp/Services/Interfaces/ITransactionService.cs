@@ -10,6 +10,8 @@ public interface ITransactionService
 
     public Task<Transaction> GetTransactionByIdAsync(int id);
 
+    public Task<TransactionDetailsViewModel> GetTransactionDetailsAsync(int id);
+
     public Task UpdateTransactionAsync(int id);
 
     public Task DeleteTransactionAsync(int id);

@@ -1,4 +1,4 @@
-@model TransactionViewModel
+@model TransactionDetailsViewModel
 
 <div class="modal fade" tabindex="-1" role="dialog" id="detailModal" aria-labelledby="detailModalLabel"
      aria-hidden="true">
@@ -17,10 +17,10 @@
                         @Html.DisplayFor(t => t.Name)
                     </dd>
                     <dt>
-                        @Html.DisplayNameFor(t => t.Category.Type)
+                        @Html.DisplayNameFor(t => t.Category)
                     </dt>
                     <dd>
-                        @Html.DisplayFor(t => t.Category.Type)
+                        @Html.DisplayFor(t => t.Category)
                     </dd>
                     <dt>
                         @Html.DisplayNameFor(t => t.Amount)

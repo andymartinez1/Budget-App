@@ -5,41 +5,60 @@ namespace BudgetApp.Services;
 
 public class TransactionService : ITransactionService
 {
-    private readonly ITransactionRepository _repository;
+    private readonly ICategoryRepository _categoryRepository;
+    private readonly ITransactionRepository _transactionRepository;
 
-    public TransactionService(ITransactionRepository repository)
+    public TransactionService(
+        ITransactionRepository transactionRepository,
+        ICategoryRepository categoryRepository
+    )
     {
-        _repository = repository;
+        _transactionRepository = transactionRepository;
+        _categoryRepository = categoryRepository;
     }
 
     public async Task AddTransactionAsync(Transaction transaction)
     {
         if (transaction != null)
-            await _repository.AddTransactionAsync(transaction);
+            await _transactionRepository.AddTransactionAsync(transaction);
     }
 
     public async Task<List<Transaction>> GetAllTransactionsAsync()
     {
-        var transactions = await _repository.GetAllTransactionsAsync();
+        var transactions = await _transactionRepository.GetAllTransactionsAsync();
         return transactions;
     }
 
     public async Task<Transaction> GetTransactionByIdAsync(int id)
     {
-        var transaction = await _repository.GetTransactionByIdAsync(id);
+        var transaction = await _transactionRepository.GetTransactionByIdAsync(id);
 
         return transaction;
     }
 
+    public async Task<TransactionDetailsViewModel> GetTransactionDetailsAsync(int id)
+    {
+        var transaction = await _transactionRepository.GetTransactionByIdAsync(id);
+        var category = await _categoryRepository.GetCategoryByIdAsync(transaction.CategoryId);
+
+        return new TransactionDetailsViewModel
+        {
+            Amount = transaction.Amount,
+            Category = category.Type,
+            Date = transaction.Date,
+            Name = transaction.Name,
+        };
+    }
+
     public async Task UpdateTransactionAsync(int id)
     {
-        var transactionToUpdate = await _repository.GetTransactionByIdAsync(id);
+        var transactionToUpdate = await _transactionRepository.GetTransactionByIdAsync(id);
 
-        await _repository.UpdateTransactionAsync(transactionToUpdate);
+        await _transactionRepository.UpdateTransactionAsync(transactionToUpdate);
     }
 
     public async Task DeleteTransactionAsync(int id)
     {
-        await _repository.DeleteTransactionAsync(id);
+        await _transactionRepository.DeleteTransactionAsync(id);
     }
 }

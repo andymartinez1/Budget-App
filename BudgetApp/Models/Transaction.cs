@@ -15,10 +15,10 @@ public class Transaction
     public string Name { get; set; } = string.Empty;
 
     [Display(Name = "Category")]
-    public int? CategoryId { get; set; }
+    public int CategoryId { get; set; }
 
     [Required]
-    public Category? Category { get; set; }
+    public Category Category { get; set; }
 
     [Required]
     [Column(TypeName = "decimal(18,2)")]

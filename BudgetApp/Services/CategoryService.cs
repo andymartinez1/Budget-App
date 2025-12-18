@@ -5,11 +5,11 @@ namespace BudgetApp.Services;
 
 public class CategoryService : ICategoryService
 {
-    private readonly ICategoryRepository _repository;
+    private readonly ICategoryRepository _categoryRepository;
 
-    public CategoryService(ICategoryRepository repository)
+    public CategoryService(ICategoryRepository categoryRepository)
     {
-        _repository = repository;
+        _categoryRepository = categoryRepository;
     }
 
     public async Task AddCategoryAsync(Category category)
@@ -19,12 +19,14 @@ public class CategoryService : ICategoryService
 
     public async Task<List<Category>> GetAllCategoriesAsync()
     {
-        return await _repository.GetAllCategoriesAsync();
+        return await _categoryRepository.GetAllCategoriesAsync();
     }
 
     public async Task<Category> GetCategoryByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        var category = await _categoryRepository.GetCategoryByIdAsync(id);
+
+        return category;
     }
 
     public async Task UpdateCategoryAsync(int id)

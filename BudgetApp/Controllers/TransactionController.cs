@@ -49,20 +49,12 @@ public class TransactionController : Controller
     [HttpGet]
     public async Task<IActionResult> Details(int id)
     {
-        var transaction = await _transactionService.GetTransactionByIdAsync(id);
+        var transactionDetailsVm = await _transactionService.GetTransactionDetailsAsync(id);
 
-        var transactionVm = new TransactionViewModel
-        {
-            Date = transaction.Date,
-            Amount = transaction.Amount,
-            CategoryId = transaction.CategoryId,
-            Name = transaction.Name,
-        };
-
-        if (transactionVm == null)
+        if (transactionDetailsVm == null)
             return NotFound();
 
-        return PartialView("_DetailsModalPartial", transactionVm);
+        return PartialView("_DetailsModalPartial", transactionDetailsVm);
     }
 
     [HttpGet]

@@ -15,7 +15,9 @@ public class CategoryRepository : ICategoryRepository
 
     public async Task AddCategoryAsync(Category category)
     {
-        throw new NotImplementedException();
+        await _dbContext.Categories.AddAsync(category);
+
+        await _dbContext.SaveChangesAsync();
     }
 
     public async Task<List<Category>> GetAllCategoriesAsync()
@@ -25,16 +27,24 @@ public class CategoryRepository : ICategoryRepository
 
     public async Task<Category> GetCategoryByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        var category = await _dbContext.Categories.FindAsync(id);
+
+        return category;
     }
 
     public async Task UpdateCategoryAsync(Category category)
     {
-        throw new NotImplementedException();
+        _dbContext.Categories.Update(category);
+
+        await _dbContext.SaveChangesAsync();
     }
 
     public async Task DeleteCategoryAsync(int id)
     {
-        throw new NotImplementedException();
+        var category = await GetCategoryByIdAsync(id);
+
+        _dbContext.Categories.Remove(category);
+
+        await _dbContext.SaveChangesAsync();
     }
 }
