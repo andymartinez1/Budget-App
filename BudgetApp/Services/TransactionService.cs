@@ -12,34 +12,34 @@ public class TransactionService : ITransactionService
         _repository = repository;
     }
 
-    public async Task AddTransaction(Transaction transaction)
+    public async Task AddTransactionAsync(Transaction transaction)
     {
         if (transaction != null)
-            await _repository.AddTransaction(transaction);
+            await _repository.AddTransactionAsync(transaction);
     }
 
-    public async Task<List<Transaction>> GetAllTransactions()
+    public async Task<List<Transaction>> GetAllTransactionsAsync()
     {
-        var transactions = await _repository.GetAllTransactions();
+        var transactions = await _repository.GetAllTransactionsAsync();
         return transactions;
     }
 
-    public async Task<Transaction> GetTransactionById(int id)
+    public async Task<Transaction> GetTransactionByIdAsync(int id)
     {
-        var transaction = await _repository.GetTransactionById(id);
+        var transaction = await _repository.GetTransactionByIdAsync(id);
 
         return transaction;
     }
 
-    public async Task UpdateTransaction(int id)
+    public async Task UpdateTransactionAsync(int id)
     {
-        var transactionToUpdate = await _repository.GetTransactionById(id);
+        var transactionToUpdate = await _repository.GetTransactionByIdAsync(id);
 
-        await _repository.UpdateTransaction(transactionToUpdate);
+        await _repository.UpdateTransactionAsync(transactionToUpdate);
     }
 
-    public async Task DeleteTransaction(int id)
+    public async Task DeleteTransactionAsync(int id)
     {
-        await _repository.DeleteTransaction(id);
+        await _repository.DeleteTransactionAsync(id);
     }
 }

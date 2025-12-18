@@ -13,27 +13,27 @@ public class CategoryRepository : ICategoryRepository
         _dbContext = dbContext;
     }
 
-    public async Task AddCategory(Category category)
+    public async Task AddCategoryAsync(Category category)
     {
         throw new NotImplementedException();
     }
 
-    public async Task<List<Category>> GetAllCategories()
+    public async Task<List<Category>> GetAllCategoriesAsync()
     {
         return await _dbContext.Categories.ToListAsync();
     }
 
-    public async Task<Category> GetCategoryById(int id)
+    public async Task<Category> GetCategoryByIdAsync(int id)
     {
         throw new NotImplementedException();
     }
 
-    public async Task UpdateCategory(Category category)
+    public async Task UpdateCategoryAsync(Category category)
     {
         throw new NotImplementedException();
     }
 
-    public async Task DeleteCategory(int id)
+    public async Task DeleteCategoryAsync(int id)
     {
         throw new NotImplementedException();
     }

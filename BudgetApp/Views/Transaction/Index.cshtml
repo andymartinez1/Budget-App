@@ -9,66 +9,70 @@
     <h1>Transaction History</h1>
 
     <p>
-        <button type="button" class="btn btn-primary" data-bs-toggle="ajax-modal" data-bs-target="#createModal"
-                data-url="@Url.Action("Create", "Transaction")">Create New
+        <button type="button" class="btn btn-primary" data-toggle="create-modal" data-bs-target="#createModal"
+                data-url="@Url.Action("Create", "Transaction")">Add Transaction
         </button>
     </p>
 
     <form asp-controller="Transaction" asp-action="Index" method="get">
-        <p>
+        <div>
             <select asp-for="FilterCategory" asp-items="Model.Categories">
                 <option value="">All Categories</option>
             </select>
-            <label>Transaction: <input type="text" asp-for="FilterCategory"/></label>
+            <label>Search Transactions: <input type="text" asp-for="FilterCategory"/></label>
             <input type="submit" value="Filter"/>
-        </p>
+        </div>
     </form>
+    <br/>
 
-    <table class="table table-hover">
-        <thead>
+    <table class="table table-hover table-striped">
+        <thead class="text-center">
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Transactions.FirstOrDefault().Date)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Transactions.FirstOrDefault().Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Transactions.FirstOrDefault().Category)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Transactions.FirstOrDefault().Amount)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.Transactions.FirstOrDefault().Category)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Transactions.FirstOrDefault().Date)
+            </th>
+            <th style="width: 15%">
                 Actions
             </th>
         </tr>
         </thead>
-        <tbody>
+        <tbody class="text-center">
         @foreach (var transaction in Model.Transactions)
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => transaction.Date)
-                </td>
-                <td>
                     @Html.DisplayFor(modelItem => transaction.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => transaction.Category.Type)
                 </td>
                 <td class="@(transaction.Amount > 0 ? "text-success" : "text-danger")">
                     @Html.DisplayFor(modelItem => transaction.Amount)
                 </td>
                 <td>
+                    @Html.DisplayFor(modelItem => transaction.Category.Type)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => transaction.Date)
+                </td>
+                <td>
                     <button class="btn btn-info" data-toggle="edit-modal" data-bs-target="#editModal"
-                            data-url="@Url.Action("Edit", "Transaction", new { id = transaction.Id })">Edit
+                            data-url="@Url.Action("Edit", "Transaction", new { id = transaction.Id })"><i
+                            class="bi bi-pencil-square"></i>
                     </button>
                     <button class="btn btn-success" data-toggle="detail-modal" data-bs-target="#detailModal"
-                            data-url="@Url.Action("Details", "Transaction", new { id = transaction.Id })">Details
+                            data-url="@Url.Action("Details", "Transaction", new { id = transaction.Id })"><i
+                            class="bi bi-info-circle"></i>
                     </button>
                     <button class="btn btn-danger" data-toggle="delete-modal" data-bs-target="#deleteModal"
-                            data-url="@Url.Action("Delete", "Transaction", new { id = transaction.Id })">Delete
+                            data-url="@Url.Action("Delete", "Transaction", new { id = transaction.Id })"><i
+                            class="bi bi-trash"></i>
                     </button>
                 </td>
             </tr>

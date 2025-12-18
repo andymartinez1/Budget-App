@@ -23,8 +23,7 @@ public class SeedCategoryData
                 new Category { Type = "Food" },
                 new Category { Type = "Gift" },
                 new Category { Type = "Donation" },
-                new Category { Type = "Taxes" },
-                new Category { Type = "Donation" }
+                new Category { Type = "Taxes" }
             );
 
             context.SaveChanges();

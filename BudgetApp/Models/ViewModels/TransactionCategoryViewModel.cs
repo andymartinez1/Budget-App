@@ -12,14 +12,14 @@ public class TransactionCategoryViewModel
     [Display(Name = "Category")]
     public string? FilterCategory { get; set; }
 
-    public void SetCategories(IEnumerable<CategoryViewModel> categories)
+    public void SetCategories(List<Category> categories)
     {
         Categories =
             (List<SelectListItem>)
                 categories.Select(x => new SelectListItem
                 {
-                    Value = x.Id.ToString(),
-                    Text = x.Name,
+                    Value = x.CategoryId.ToString(),
+                    Text = x.Type,
                 });
     }
 }

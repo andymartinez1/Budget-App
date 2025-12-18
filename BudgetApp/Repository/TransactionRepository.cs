@@ -13,35 +13,35 @@ public class TransactionRepository : ITransactionRepository
         _dbContext = dbContext;
     }
 
-    public async Task AddTransaction(Transaction transaction)
+    public async Task AddTransactionAsync(Transaction transaction)
     {
         await _dbContext.Transactions.AddAsync(transaction);
 
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task<List<Transaction>> GetAllTransactions()
+    public async Task<List<Transaction>> GetAllTransactionsAsync()
     {
         return await _dbContext.Transactions.ToListAsync();
     }
 
-    public async Task<Transaction> GetTransactionById(int id)
+    public async Task<Transaction> GetTransactionByIdAsync(int id)
     {
         var transaction = await _dbContext.Transactions.FindAsync(id);
 
         return transaction;
     }
 
-    public async Task UpdateTransaction(Transaction transaction)
+    public async Task UpdateTransactionAsync(Transaction transaction)
     {
         _dbContext.Transactions.Update(transaction);
 
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task DeleteTransaction(int id)
+    public async Task DeleteTransactionAsync(int id)
     {
-        var transaction = await GetTransactionById(id);
+        var transaction = await GetTransactionByIdAsync(id);
 
         _dbContext.Transactions.Remove(transaction);
 

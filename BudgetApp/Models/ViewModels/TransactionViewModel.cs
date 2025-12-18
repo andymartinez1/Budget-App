@@ -21,7 +21,7 @@ public class TransactionViewModel
     [Display(Name = "Category")]
     public int? CategoryId { get; set; }
 
-    public CategoryViewModel Category { get; set; }
+    public Category Category { get; set; }
 
     public List<SelectListItem> Categories { get; set; }
 

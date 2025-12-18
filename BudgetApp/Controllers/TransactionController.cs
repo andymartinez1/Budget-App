@@ -25,16 +25,23 @@ public class TransactionController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index(string searchString)
+    public async Task<IActionResult> Index(string filterCategory)
     {
         if (_context.Transactions == null)
             return Problem("Entity set is null");
 
-        var transactions = await _transactionService.GetAllTransactions();
-        var categories = await _categoryService.GetAllCategories();
-        var category = categories.Select(c => c.Type);
+        var transactions = await _transactionService.GetAllTransactionsAsync();
+        var categories = await _categoryService.GetAllCategoriesAsync();
 
-        var transactionVm = new TransactionCategoryViewModel { Transactions = transactions };
+        var transactionVm = new TransactionCategoryViewModel
+        {
+            Categories = categories
+                .OrderBy(c => c.Type)
+                .Select(c => new SelectListItem { Value = c.CategoryId.ToString(), Text = c.Type })
+                .ToList(),
+            FilterCategory = filterCategory,
+            Transactions = transactions,
+        };
 
         return View(transactionVm);
     }
@@ -42,53 +49,60 @@ public class TransactionController : Controller
     [HttpGet]
     public async Task<IActionResult> Details(int id)
     {
-        var transaction = await _context
-            .Transactions.Include(t => t.Category)
-            .FirstOrDefaultAsync(m => m.Id == id);
+        var transaction = await _transactionService.GetTransactionByIdAsync(id);
 
-        if (transaction == null)
+        var transactionVm = new TransactionViewModel
+        {
+            Date = transaction.Date,
+            Amount = transaction.Amount,
+            CategoryId = transaction.CategoryId,
+            Name = transaction.Name,
+        };
+
+        if (transactionVm == null)
             return NotFound();
 
-        return PartialView("_DetailsModalPartial", transaction);
+        return PartialView("_DetailsModalPartial", transactionVm);
     }
 
     [HttpGet]
     public IActionResult Create()
     {
-        ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id");
+        ViewData["CategoryId"] = new SelectList(
+            _context.Categories.OrderBy(c => c.Type),
+            "CategoryId",
+            "Type"
+        );
         return PartialView("_CreateModalPartial");
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("Id,Date,Name,Amount")] Transaction transaction)
+    public async Task<IActionResult> Create(Transaction transaction)
     {
         if (ModelState.IsValid)
-        {
-            _context.Transactions.Add(transaction);
-            await _context.SaveChangesAsync();
-        }
+            await _transactionService.AddTransactionAsync(transaction);
 
         return PartialView("_CreateModalPartial", transaction);
     }
 
     [HttpGet]
-    public async Task<IActionResult> Edit(int? id)
+    public async Task<IActionResult> Edit(int id)
     {
-        if (id == null)
+        var transaction = await _transactionService.GetTransactionByIdAsync(id);
+
+        var transactionVm = new TransactionViewModel
+        {
+            Date = transaction.Date,
+            Amount = transaction.Amount,
+            CategoryId = transaction.CategoryId,
+            Name = transaction.Name,
+        };
+
+        if (transactionVm == null)
             return NotFound();
 
-        var transaction = await _context.Transactions.FindAsync(id);
-        if (transaction == null)
-            return NotFound();
-
-        ViewData["CategoryId"] = new SelectList(
-            _context.Categories,
-            "Id",
-            "Id",
-            transaction.CategoryId
-        );
-        return PartialView("_EditModalPartial", transaction);
+        return PartialView("_EditModalPartial", transactionVm);
     }
 
     [HttpPost]
@@ -161,10 +175,13 @@ public class TransactionController : Controller
         return _context.Transactions.Any(e => e.Id == id);
     }
 
-    private async Task<IEnumerable<CategoryViewModel>> GetCategoriesAsync()
+    private SelectList GetCategorySelectList(object selectedValue = null)
     {
-        var categories = await _categoryService.GetAllCategories();
-
-        return categories.Select(c => new CategoryViewModel());
+        return new SelectList(
+            _context.Categories.AsNoTracking().OrderBy(c => c.Type),
+            "CategoryId",
+            "Type",
+            selectedValue
+        );
     }
 }
