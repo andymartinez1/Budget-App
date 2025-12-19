@@ -1,5 +1,8 @@
 ﻿using BudgetApp.Models;
-using BudgetApp.Repository;
+using BudgetApp.Models.ViewModels;
+using BudgetApp.Repository.Interfaces;
+using BudgetApp.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace BudgetApp.Services;
 
@@ -17,10 +20,19 @@ public class TransactionService : ITransactionService
         _categoryRepository = categoryRepository;
     }
 
-    public async Task AddTransactionAsync(Transaction transaction)
+    public async Task<TransactionViewModel> AddTransactionAsync(TransactionViewModel transactionVm)
     {
-        if (transaction != null)
-            await _transactionRepository.AddTransactionAsync(transaction);
+        var transaction = new Transaction
+        {
+            Name = transactionVm.Name,
+            Date = transactionVm.Date,
+            Amount = transactionVm.Amount,
+            CategoryId = transactionVm.CategoryId,
+        };
+
+        await _transactionRepository.AddTransactionAsync(transaction);
+
+        return transactionVm;
     }
 
     public async Task<List<Transaction>> GetAllTransactionsAsync()
@@ -36,12 +48,12 @@ public class TransactionService : ITransactionService
         return transaction;
     }
 
-    public async Task<TransactionDetailsViewModel> GetTransactionDetailsAsync(int id)
+    public async Task<TransactionViewModel> GetTransactionDetailsAsync(int id)
     {
         var transaction = await _transactionRepository.GetTransactionByIdAsync(id);
         var category = await _categoryRepository.GetCategoryByIdAsync(transaction.CategoryId);
 
-        return new TransactionDetailsViewModel
+        return new TransactionViewModel
         {
             Amount = transaction.Amount,
             Category = category.Type,
@@ -50,11 +62,20 @@ public class TransactionService : ITransactionService
         };
     }
 
-    public async Task UpdateTransactionAsync(int id)
+    public async Task<TransactionViewModel> UpdateTransactionAsync(int id)
     {
         var transactionToUpdate = await _transactionRepository.GetTransactionByIdAsync(id);
+        var categories = await _categoryRepository.GetAllCategoriesAsync();
 
-        await _transactionRepository.UpdateTransactionAsync(transactionToUpdate);
+        return new TransactionViewModel
+        {
+            Id = transactionToUpdate.TransactionId,
+            Amount = transactionToUpdate.Amount,
+            Date = transactionToUpdate.Date,
+            Name = transactionToUpdate.Name,
+            CategoryId = transactionToUpdate.CategoryId,
+            Categories = new SelectList(categories.Select(c => c.Type)),
+        };
     }
 
     public async Task DeleteTransactionAsync(int id)

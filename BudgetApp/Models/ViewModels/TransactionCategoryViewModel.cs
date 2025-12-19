@@ -1,25 +1,17 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace BudgetApp.Models;
+namespace BudgetApp.Models.ViewModels;
 
 public class TransactionCategoryViewModel
 {
-    public List<Transaction> Transactions { get; set; } = [];
+    public List<Models.Transaction> Transactions { get; set; } = [];
 
-    public List<SelectListItem> Categories { get; set; } = [];
+    public SelectList Categories { get; set; }
+
+    [Display(Name = "Filter")]
+    public string? SearchName { get; set; }
 
     [Display(Name = "Category")]
     public string? FilterCategory { get; set; }
-
-    public void SetCategories(List<Category> categories)
-    {
-        Categories =
-            (List<SelectListItem>)
-                categories.Select(x => new SelectListItem
-                {
-                    Value = x.CategoryId.ToString(),
-                    Text = x.Type,
-                });
-    }
 }

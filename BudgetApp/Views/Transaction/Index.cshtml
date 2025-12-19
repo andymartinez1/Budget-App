@@ -1,4 +1,4 @@
-@model TransactionCategoryViewModel
+@model BudgetApp.Models.ViewModels.TransactionCategoryViewModel
 
 @{
     ViewData["Title"] = "Index";
@@ -63,15 +63,15 @@
                 </td>
                 <td>
                     <button class="btn btn-info" data-toggle="edit-modal" data-bs-target="#editModal"
-                            data-url="@Url.Action("Edit", "Transaction", new { id = transaction.Id })"><i
+                            data-url="@Url.Action("Edit", "Transaction", new { id = transaction.TransactionId })"><i
                             class="bi bi-pencil-square"></i>
                     </button>
                     <button class="btn btn-success" data-toggle="detail-modal" data-bs-target="#detailModal"
-                            data-url="@Url.Action("Details", "Transaction", new { id = transaction.Id })"><i
+                            data-url="@Url.Action("Details", "Transaction", new { id = transaction.TransactionId })"><i
                             class="bi bi-info-circle"></i>
                     </button>
                     <button class="btn btn-danger" data-toggle="delete-modal" data-bs-target="#deleteModal"
-                            data-url="@Url.Action("Delete", "Transaction", new { id = transaction.Id })"><i
+                            data-url="@Url.Action("Delete", "Transaction", new { id = transaction.TransactionId })"><i
                             class="bi bi-trash"></i>
                     </button>
                 </td>

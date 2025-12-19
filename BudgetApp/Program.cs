@@ -1,6 +1,8 @@
 using BudgetApp.Data;
 using BudgetApp.Repository;
+using BudgetApp.Repository.Interfaces;
 using BudgetApp.Services;
+using BudgetApp.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

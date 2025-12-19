@@ -1,6 +1,6 @@
 ﻿using BudgetApp.Models;
 
-namespace BudgetApp.Services;
+namespace BudgetApp.Services.Interfaces;
 
 public interface ICategoryService
 {

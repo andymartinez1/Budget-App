@@ -1,5 +1,6 @@
 ﻿using BudgetApp.Models;
-using BudgetApp.Repository;
+using BudgetApp.Repository.Interfaces;
+using BudgetApp.Services.Interfaces;
 
 namespace BudgetApp.Services;
 

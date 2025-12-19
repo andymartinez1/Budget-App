@@ -1,5 +1,6 @@
 ﻿using BudgetApp.Data;
 using BudgetApp.Models;
+using BudgetApp.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace BudgetApp.Repository;

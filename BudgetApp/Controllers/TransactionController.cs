@@ -1,46 +1,37 @@
-using BudgetApp.Data;
 using BudgetApp.Models;
-using BudgetApp.Services;
+using BudgetApp.Models.ViewModels;
+using BudgetApp.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 
 namespace BudgetApp.Controllers;
 
 public class TransactionController : Controller
 {
     private readonly ICategoryService _categoryService;
-    private readonly BudgetDbContext _context;
     private readonly ITransactionService _transactionService;
 
     public TransactionController(
-        BudgetDbContext context,
         ITransactionService transactionService,
         ICategoryService categoryService
     )
     {
-        _context = context;
         _transactionService = transactionService;
         _categoryService = categoryService;
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index(string filterCategory)
+    public async Task<IActionResult> Index(string filterCategory, string searchName)
     {
-        if (_context.Transactions == null)
-            return Problem("Entity set is null");
-
         var transactions = await _transactionService.GetAllTransactionsAsync();
         var categories = await _categoryService.GetAllCategoriesAsync();
 
         var transactionVm = new TransactionCategoryViewModel
         {
-            Categories = categories
-                .OrderBy(c => c.Type)
-                .Select(c => new SelectListItem { Value = c.CategoryId.ToString(), Text = c.Type })
-                .ToList(),
+            Categories = GetCategorySelectList(categories),
             FilterCategory = filterCategory,
             Transactions = transactions,
+            SearchName = searchName,
         };
 
         return View(transactionVm);
@@ -51,102 +42,82 @@ public class TransactionController : Controller
     {
         var transactionDetailsVm = await _transactionService.GetTransactionDetailsAsync(id);
 
-        if (transactionDetailsVm == null)
-            return NotFound();
-
         return PartialView("_DetailsModalPartial", transactionDetailsVm);
     }
 
     [HttpGet]
-    public IActionResult Create()
+    public async Task<IActionResult> Create()
     {
-        ViewData["CategoryId"] = new SelectList(
-            _context.Categories.OrderBy(c => c.Type),
-            "CategoryId",
-            "Type"
-        );
-        return PartialView("_CreateModalPartial");
+        var categories = await _categoryService.GetAllCategoriesAsync();
+
+        var transactionEditVm = new TransactionViewModel
+        {
+            Categories = GetCategorySelectList(categories),
+        };
+
+        return PartialView("_CreateModalPartial", transactionEditVm);
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(Transaction transaction)
+    public async Task<IActionResult> Create(
+        [Bind("Name,Date,Amount,Category")] TransactionViewModel transaction
+    )
     {
-        if (ModelState.IsValid)
-            await _transactionService.AddTransactionAsync(transaction);
+        var transactionCreateVm = await _transactionService.AddTransactionAsync(transaction);
 
-        return PartialView("_CreateModalPartial", transaction);
+        return PartialView("_CreateModalPartial", transactionCreateVm);
     }
 
     [HttpGet]
     public async Task<IActionResult> Edit(int id)
     {
         var transaction = await _transactionService.GetTransactionByIdAsync(id);
+        var categories = await _categoryService.GetAllCategoriesAsync();
+        var category = await _categoryService.GetCategoryByIdAsync(transaction.CategoryId);
 
-        var transactionVm = new TransactionViewModel
+        var transactionEditVm = new TransactionViewModel
         {
-            Date = transaction.Date,
             Amount = transaction.Amount,
-            CategoryId = transaction.CategoryId,
+            Date = transaction.Date,
             Name = transaction.Name,
+            Id = transaction.TransactionId,
+            Category = category.Type,
+            CategoryId = transaction.CategoryId,
+            Categories = GetCategorySelectList(categories),
         };
 
-        if (transactionVm == null)
-            return NotFound();
-
-        return PartialView("_EditModalPartial", transactionVm);
+        return PartialView("_EditModalPartial", transactionEditVm);
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(
-        int id,
-        [Bind("Id,Date,Name,Description,CategoryId,Amount")] Transaction transaction
+        [Bind("Id,Name,Date,Amount,Category,Categories")] TransactionViewModel transactionVm
     )
     {
-        if (id != transaction.Id)
-            return NotFound();
-
         if (ModelState.IsValid)
         {
-            try
-            {
-                _context.Update(transaction);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TransactionExists(transaction.Id))
-                    return NotFound();
+            var category = await _categoryService.GetCategoryByIdAsync(transactionVm.CategoryId);
+            if (category is null)
+                return NotFound();
 
-                throw;
-            }
+            transactionVm.CategoryViewModel = new CategoryViewModel();
 
-            return RedirectToAction(nameof(Index));
+            await _transactionService.UpdateTransactionAsync(transactionVm.Id);
+
+            return Json(new { success = true });
         }
 
-        ViewData["CategoryId"] = new SelectList(
-            _context.Categories,
-            "Id",
-            "Id",
-            transaction.CategoryId
-        );
-        return PartialView("_EditModalPartial", transaction);
+        return PartialView("_EditModalPartial", transactionVm);
     }
 
     [HttpGet]
-    public async Task<IActionResult> Delete(int? id)
+    public async Task<IActionResult> Delete(int id)
     {
-        if (id == null)
-            return NotFound();
+        var transactionDetailsVm = await _transactionService.GetTransactionDetailsAsync(id);
 
-        var transaction = await _context
-            .Transactions.Include(t => t.Category)
-            .FirstOrDefaultAsync(m => m.Id == id);
-        if (transaction == null)
-            return NotFound();
-
-        return PartialView("_DeleteModalPartial", transaction);
+        return PartialView("_DeleteModalPartial", transactionDetailsVm);
     }
 
     [HttpPost]
@@ -154,26 +125,13 @@ public class TransactionController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
-        var transaction = await _context.Transactions.FindAsync(id);
-        if (transaction != null)
-            _context.Transactions.Remove(transaction);
+        await _transactionService.DeleteTransactionAsync(id);
 
-        await _context.SaveChangesAsync();
         return RedirectToAction(nameof(Index));
     }
 
-    private bool TransactionExists(int id)
+    public SelectList GetCategorySelectList(List<Category> categories)
     {
-        return _context.Transactions.Any(e => e.Id == id);
-    }
-
-    private SelectList GetCategorySelectList(object selectedValue = null)
-    {
-        return new SelectList(
-            _context.Categories.AsNoTracking().OrderBy(c => c.Type),
-            "CategoryId",
-            "Type",
-            selectedValue
-        );
+        return new SelectList(categories.Select(c => c.Type));
     }
 }

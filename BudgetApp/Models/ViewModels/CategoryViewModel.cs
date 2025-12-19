@@ -1,4 +1,4 @@
-﻿namespace BudgetApp.Models;
+﻿namespace BudgetApp.Models.ViewModels;
 
 public class CategoryViewModel
 {
