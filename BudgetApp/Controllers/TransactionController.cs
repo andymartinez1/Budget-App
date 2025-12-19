@@ -1,8 +1,6 @@
-using BudgetApp.Models;
 using BudgetApp.Models.ViewModels;
 using BudgetApp.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace BudgetApp.Controllers;
 
@@ -28,7 +26,7 @@ public class TransactionController : Controller
 
         var transactionVm = new TransactionCategoryViewModel
         {
-            Categories = GetCategorySelectList(categories),
+            Categories = _transactionService.GetCategorySelectList(categories),
             FilterCategory = filterCategory,
             Transactions = transactions,
             SearchName = searchName,
@@ -40,9 +38,18 @@ public class TransactionController : Controller
     [HttpGet]
     public async Task<IActionResult> Details(int id)
     {
-        var transactionDetailsVm = await _transactionService.GetTransactionDetailsAsync(id);
+        var transaction = await _transactionService.GetTransactionByIdAsync(id);
+        var category = await _categoryService.GetCategoryByIdAsync(transaction.CategoryId);
 
-        return PartialView("_DetailsModalPartial", transactionDetailsVm);
+        var transactionVm = new TransactionViewModel
+        {
+            Amount = transaction.Amount,
+            Category = category.Type,
+            Date = transaction.Date,
+            Name = transaction.Name,
+        };
+
+        return PartialView("_DetailsModalPartial", transactionVm);
     }
 
     [HttpGet]
@@ -50,44 +57,52 @@ public class TransactionController : Controller
     {
         var categories = await _categoryService.GetAllCategoriesAsync();
 
-        var transactionEditVm = new TransactionViewModel
+        var transactionVm = new TransactionViewModel
         {
-            Categories = GetCategorySelectList(categories),
+            Categories = _transactionService.GetCategorySelectList(categories),
         };
 
-        return PartialView("_CreateModalPartial", transactionEditVm);
+        return PartialView("_CreateModalPartial", transactionVm);
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(
-        [Bind("Name,Date,Amount,Category")] TransactionViewModel transaction
-    )
+    public async Task<IActionResult> Create(TransactionViewModel transactionVm)
     {
-        var transactionCreateVm = await _transactionService.AddTransactionAsync(transaction);
+        if (ModelState.IsValid)
+        {
+            var transaction = await _transactionService.AddTransactionAsync(transactionVm);
 
-        return PartialView("_CreateModalPartial", transactionCreateVm);
+            var newTransactionVm = new TransactionViewModel
+            {
+                Id = transaction.TransactionId,
+                Name = transaction.Name,
+                Date = transaction.Date,
+                Amount = transaction.Amount,
+                CategoryId = transaction.CategoryId,
+            };
+        }
+
+        return PartialView("_CreateModalPartial", transactionVm);
     }
 
     [HttpGet]
     public async Task<IActionResult> Edit(int id)
     {
-        var transaction = await _transactionService.GetTransactionByIdAsync(id);
+        var transactionToUpdate = await _transactionService.GetTransactionByIdAsync(id);
         var categories = await _categoryService.GetAllCategoriesAsync();
-        var category = await _categoryService.GetCategoryByIdAsync(transaction.CategoryId);
 
-        var transactionEditVm = new TransactionViewModel
+        var transactionVm = new TransactionViewModel
         {
-            Amount = transaction.Amount,
-            Date = transaction.Date,
-            Name = transaction.Name,
-            Id = transaction.TransactionId,
-            Category = category.Type,
-            CategoryId = transaction.CategoryId,
-            Categories = GetCategorySelectList(categories),
+            Id = transactionToUpdate.TransactionId,
+            Amount = transactionToUpdate.Amount,
+            Date = transactionToUpdate.Date,
+            Name = transactionToUpdate.Name,
+            CategoryId = transactionToUpdate.CategoryId,
+            Categories = _transactionService.GetCategorySelectList(categories),
         };
 
-        return PartialView("_EditModalPartial", transactionEditVm);
+        return PartialView("_EditModalPartial", transactionVm);
     }
 
     [HttpPost]
@@ -106,7 +121,7 @@ public class TransactionController : Controller
 
             await _transactionService.UpdateTransactionAsync(transactionVm.Id);
 
-            return Json(new { success = true });
+            return RedirectToAction(nameof(Index));
         }
 
         return PartialView("_EditModalPartial", transactionVm);
@@ -115,9 +130,18 @@ public class TransactionController : Controller
     [HttpGet]
     public async Task<IActionResult> Delete(int id)
     {
-        var transactionDetailsVm = await _transactionService.GetTransactionDetailsAsync(id);
+        var transaction = await _transactionService.GetTransactionByIdAsync(id);
+        var category = await _categoryService.GetCategoryByIdAsync(transaction.CategoryId);
 
-        return PartialView("_DeleteModalPartial", transactionDetailsVm);
+        var transactionVm = new TransactionViewModel
+        {
+            Amount = transaction.Amount,
+            Category = category.Type,
+            Date = transaction.Date,
+            Name = transaction.Name,
+        };
+
+        return PartialView("_DeleteModalPartial", transactionVm);
     }
 
     [HttpPost]
@@ -128,10 +152,5 @@ public class TransactionController : Controller
         await _transactionService.DeleteTransactionAsync(id);
 
         return RedirectToAction(nameof(Index));
-    }
-
-    public SelectList GetCategorySelectList(List<Category> categories)
-    {
-        return new SelectList(categories.Select(c => c.Type));
     }
 }

@@ -8,7 +8,7 @@ public class Transaction
     public int TransactionId { get; set; }
 
     [Required]
-    public DateTime Date { get; set; }
+    public DateTime Date { get; set; } = DateTime.Now;
 
     [Required]
     public string Name { get; set; } = string.Empty;
