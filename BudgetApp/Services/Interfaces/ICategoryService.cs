@@ -1,4 +1,5 @@
 ﻿using BudgetApp.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace BudgetApp.Services.Interfaces;
 
@@ -13,4 +14,6 @@ public interface ICategoryService
     public Task UpdateCategoryAsync(int id);
 
     public Task DeleteCategoryAsync(int id);
+
+    public SelectList GetCategorySelectList(List<Category> categories);
 }

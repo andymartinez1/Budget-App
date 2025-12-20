@@ -1,6 +1,7 @@
 ﻿using BudgetApp.Models;
 using BudgetApp.Repository.Interfaces;
 using BudgetApp.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace BudgetApp.Services;
 
@@ -15,7 +16,7 @@ public class CategoryService : ICategoryService
 
     public async Task AddCategoryAsync(Category category)
     {
-        throw new NotImplementedException();
+        await _categoryRepository.AddCategoryAsync(category);
     }
 
     public async Task<List<Category>> GetAllCategoriesAsync()
@@ -32,11 +33,18 @@ public class CategoryService : ICategoryService
 
     public async Task UpdateCategoryAsync(int id)
     {
-        throw new NotImplementedException();
+        var category = await GetCategoryByIdAsync(id);
+
+        await _categoryRepository.UpdateCategoryAsync(category);
     }
 
     public async Task DeleteCategoryAsync(int id)
     {
-        throw new NotImplementedException();
+        await _categoryRepository.DeleteCategoryAsync(id);
+    }
+
+    public SelectList GetCategorySelectList(List<Category> categories)
+    {
+        return new SelectList(categories.Select(c => c.Type));
     }
 }

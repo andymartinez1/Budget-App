@@ -2,7 +2,6 @@
 using BudgetApp.Models.ViewModels;
 using BudgetApp.Repository.Interfaces;
 using BudgetApp.Services.Interfaces;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace BudgetApp.Services;
 
@@ -58,10 +57,5 @@ public class TransactionService : ITransactionService
     public async Task DeleteTransactionAsync(int id)
     {
         await _transactionRepository.DeleteTransactionAsync(id);
-    }
-
-    public SelectList GetCategorySelectList(List<Category> categories)
-    {
-        return new SelectList(categories.Select(c => c.Type));
     }
 }

@@ -19,17 +19,17 @@ public class TransactionController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index(string filterCategory, string searchName)
+    public async Task<IActionResult> Index(string filterCategory, string searchString)
     {
         var transactions = await _transactionService.GetAllTransactionsAsync();
         var categories = await _categoryService.GetAllCategoriesAsync();
 
         var transactionVm = new TransactionCategoryViewModel
         {
-            Categories = _transactionService.GetCategorySelectList(categories),
+            Categories = _categoryService.GetCategorySelectList(categories),
             FilterCategory = filterCategory,
             Transactions = transactions,
-            SearchName = searchName,
+            SearchName = searchString,
         };
 
         return View(transactionVm);
@@ -59,7 +59,7 @@ public class TransactionController : Controller
 
         var transactionVm = new TransactionViewModel
         {
-            Categories = _transactionService.GetCategorySelectList(categories),
+            Categories = _categoryService.GetCategorySelectList(categories),
         };
 
         return PartialView("_CreateModalPartial", transactionVm);
@@ -99,7 +99,7 @@ public class TransactionController : Controller
             Date = transactionToUpdate.Date,
             Name = transactionToUpdate.Name,
             CategoryId = transactionToUpdate.CategoryId,
-            Categories = _transactionService.GetCategorySelectList(categories),
+            Categories = _categoryService.GetCategorySelectList(categories),
         };
 
         return PartialView("_EditModalPartial", transactionVm);

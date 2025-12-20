@@ -1,6 +1,7 @@
 using BudgetApp.Data;
 using BudgetApp.Models;
 using BudgetApp.Models.ViewModels;
+using BudgetApp.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,25 +9,26 @@ namespace BudgetApp.Controllers;
 
 public class CategoryController : Controller
 {
+    private readonly ICategoryService _categoryService;
     private readonly BudgetDbContext _context;
 
-    public CategoryController(BudgetDbContext context)
+    public CategoryController(BudgetDbContext context, ICategoryService categoryService)
     {
         _context = context;
+        _categoryService = categoryService;
     }
 
     // GET: Category
     public async Task<IActionResult> Index(string searchString)
     {
-        if (_context.Categories == null)
-            return Problem("Entity set is null");
+        var categories = await _categoryService.GetAllCategoriesAsync();
+        var categoryVm = new TransactionCategoryViewModel
+        {
+            Categories = _categoryService.GetCategorySelectList(categories),
+            SearchName = searchString,
+        };
 
-        var transactions = await _context.Transactions.ToListAsync();
-        var categories = await _context.Categories.ToListAsync();
-        var category = categories.Select(c => c.Type);
-
-        var transactionVm = new TransactionViewModel();
-        return View(transactionVm);
+        return View(categoryVm);
     }
 
     // GET: Category/Details/5
@@ -49,8 +51,6 @@ public class CategoryController : Controller
     }
 
     // POST: Category/Create
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create([Bind("Id,Type")] Category category)
@@ -79,8 +79,6 @@ public class CategoryController : Controller
     }
 
     // POST: Category/Edit/5
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(int id, [Bind("Id,Type")] Category category)
