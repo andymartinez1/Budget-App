@@ -16,7 +16,7 @@
 
     <form asp-controller="Transaction" asp-action="Index" method="get">
         <div>
-            <select asp-for="FilterCategory" asp-items="Model.Categories">
+            <select asp-for="FilterCategory" asp-items="Model.CategoriesSelectList">
                 <option value="">All Categories</option>
             </select>
             <label>Search Transactions: <input type="text" asp-for="FilterCategory"/></label>

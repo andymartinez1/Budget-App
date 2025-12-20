@@ -26,7 +26,7 @@ public class TransactionController : Controller
 
         var transactionVm = new TransactionCategoryViewModel
         {
-            Categories = _categoryService.GetCategorySelectList(categories),
+            CategoriesSelectList = _categoryService.GetCategorySelectList(categories),
             FilterCategory = filterCategory,
             Transactions = transactions,
             SearchName = searchString,
@@ -67,7 +67,9 @@ public class TransactionController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(TransactionViewModel transactionVm)
+    public async Task<IActionResult> Create(
+        [Bind("TransactionId,Name, Date,Amount,CategoryId")] TransactionViewModel transactionVm
+    )
     {
         if (ModelState.IsValid)
         {
@@ -75,12 +77,14 @@ public class TransactionController : Controller
 
             var newTransactionVm = new TransactionViewModel
             {
-                Id = transaction.TransactionId,
+                TransactionId = transaction.TransactionId,
                 Name = transaction.Name,
                 Date = transaction.Date,
                 Amount = transaction.Amount,
                 CategoryId = transaction.CategoryId,
             };
+
+            return RedirectToAction(nameof(Index));
         }
 
         return PartialView("_CreateModalPartial", transactionVm);
@@ -94,7 +98,7 @@ public class TransactionController : Controller
 
         var transactionVm = new TransactionViewModel
         {
-            Id = transactionToUpdate.TransactionId,
+            TransactionId = transactionToUpdate.TransactionId,
             Amount = transactionToUpdate.Amount,
             Date = transactionToUpdate.Date,
             Name = transactionToUpdate.Name,
@@ -108,7 +112,8 @@ public class TransactionController : Controller
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(
-        [Bind("Id,Name,Date,Amount,Category,Categories")] TransactionViewModel transactionVm
+        [Bind("TransactionId,Name,Date,Amount,Category,Categories")]
+            TransactionViewModel transactionVm
     )
     {
         if (ModelState.IsValid)
@@ -119,7 +124,7 @@ public class TransactionController : Controller
 
             transactionVm.CategoryViewModel = new CategoryViewModel();
 
-            await _transactionService.UpdateTransactionAsync(transactionVm.Id);
+            await _transactionService.UpdateTransactionAsync(transactionVm.TransactionId);
 
             return RedirectToAction(nameof(Index));
         }

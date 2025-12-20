@@ -2,9 +2,18 @@
 
 public class CategoryViewModel
 {
-    public int Id { get; set; }
+    public CategoryViewModel(Category category)
+    {
+        CategoryId = category.CategoryId;
+        Type = category.Type;
+        Transactions = [];
+    }
 
-    public string Name { get; set; } = string.Empty;
+    public CategoryViewModel() { }
+
+    public int CategoryId { get; set; }
+
+    public string Type { get; set; } = string.Empty;
 
     public List<TransactionViewModel>? Transactions { get; set; }
 }

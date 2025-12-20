@@ -1,20 +1,16 @@
-using BudgetApp.Data;
 using BudgetApp.Models;
 using BudgetApp.Models.ViewModels;
 using BudgetApp.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace BudgetApp.Controllers;
 
 public class CategoryController : Controller
 {
     private readonly ICategoryService _categoryService;
-    private readonly BudgetDbContext _context;
 
-    public CategoryController(BudgetDbContext context, ICategoryService categoryService)
+    public CategoryController(ICategoryService categoryService)
     {
-        _context = context;
         _categoryService = categoryService;
     }
 
@@ -24,100 +20,77 @@ public class CategoryController : Controller
         var categories = await _categoryService.GetAllCategoriesAsync();
         var categoryVm = new TransactionCategoryViewModel
         {
-            Categories = _categoryService.GetCategorySelectList(categories),
+            Categories = categories,
+            CategoriesSelectList = _categoryService.GetCategorySelectList(categories),
             SearchName = searchString,
         };
 
         return View(categoryVm);
     }
 
-    // GET: Category/Details/5
-    public async Task<IActionResult> Details(int? id)
-    {
-        if (id == null)
-            return NotFound();
-
-        var category = await _context.Categories.FirstOrDefaultAsync(m => m.CategoryId == id);
-        if (category == null)
-            return NotFound();
-
-        return View(category);
-    }
-
     // GET: Category/Create
-    public IActionResult Create()
+    public async Task<IActionResult> Create()
     {
-        return View();
+        var categories = await _categoryService.GetAllCategoriesAsync();
+
+        var categoryVm = new CategoryViewModel();
+
+        return PartialView("_CreateCategoryModalPartial", categoryVm);
     }
 
     // POST: Category/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("Id,Type")] Category category)
+    public async Task<IActionResult> Create([Bind("CategoryId,Type")] CategoryViewModel categoryVm)
     {
         if (ModelState.IsValid)
         {
-            _context.Add(category);
-            await _context.SaveChangesAsync();
+            var category = new Category { Type = categoryVm.Type };
+
+            await _categoryService.AddCategoryAsync(category);
+
             return RedirectToAction(nameof(Index));
         }
 
-        return View(category);
+        return PartialView("_CreateCategoryModalPartial", categoryVm);
     }
 
     // GET: Category/Edit/5
-    public async Task<IActionResult> Edit(int? id)
+    public async Task<IActionResult> Edit(int id)
     {
-        if (id == null)
-            return NotFound();
+        var categoryToUpdate = await _categoryService.GetCategoryByIdAsync(id);
 
-        var category = await _context.Categories.FindAsync(id);
-        if (category == null)
-            return NotFound();
+        var categoryVm = new CategoryViewModel(categoryToUpdate);
 
-        return View(category);
+        return PartialView("_EditCategoryModalPartial", categoryVm);
     }
 
     // POST: Category/Edit/5
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int id, [Bind("Id,Type")] Category category)
+    public async Task<IActionResult> Edit(
+        int id,
+        [Bind("CategoryId,Type")] CategoryViewModel categoryVm
+    )
     {
-        if (id != category.CategoryId)
-            return NotFound();
-
         if (ModelState.IsValid)
         {
-            try
-            {
-                _context.Update(category);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CategoryExists(category.CategoryId))
-                    return NotFound();
-
-                throw;
-            }
+            await _categoryService.UpdateCategoryAsync(id);
 
             return RedirectToAction(nameof(Index));
         }
 
-        return View(category);
+        return PartialView("_EditCategoryModalPartial", categoryVm);
     }
 
     // GET: Category/Delete/5
-    public async Task<IActionResult> Delete(int? id)
+    public async Task<IActionResult> Delete(int id)
     {
-        if (id == null)
-            return NotFound();
+        var category = await _categoryService.GetCategoryByIdAsync(id);
 
-        var category = await _context.Categories.FirstOrDefaultAsync(m => m.CategoryId == id);
-        if (category == null)
-            return NotFound();
+        var categoryVm = new CategoryViewModel { Type = category.Type };
 
-        return View(category);
+        return PartialView("_DeleteCategoryModalPartial", categoryVm);
     }
 
     // POST: Category/Delete/5
@@ -126,16 +99,8 @@ public class CategoryController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
-        var category = await _context.Categories.FindAsync(id);
-        if (category != null)
-            _context.Categories.Remove(category);
+        await _categoryService.DeleteCategoryAsync(id);
 
-        await _context.SaveChangesAsync();
         return RedirectToAction(nameof(Index));
-    }
-
-    private bool CategoryExists(int id)
-    {
-        return _context.Categories.Any(e => e.CategoryId == id);
     }
 }

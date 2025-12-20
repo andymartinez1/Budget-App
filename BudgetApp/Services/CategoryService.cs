@@ -31,13 +31,6 @@ public class CategoryService : ICategoryService
         return category;
     }
 
-    public async Task UpdateCategoryAsync(int id)
-    {
-        var category = await GetCategoryByIdAsync(id);
-
-        await _categoryRepository.UpdateCategoryAsync(category);
-    }
-
     public async Task DeleteCategoryAsync(int id)
     {
         await _categoryRepository.DeleteCategoryAsync(id);
@@ -46,5 +39,12 @@ public class CategoryService : ICategoryService
     public SelectList GetCategorySelectList(List<Category> categories)
     {
         return new SelectList(categories.Select(c => c.Type));
+    }
+
+    public async Task UpdateCategoryAsync(int id)
+    {
+        var category = await GetCategoryByIdAsync(id);
+
+        await _categoryRepository.UpdateCategoryAsync(category);
     }
 }

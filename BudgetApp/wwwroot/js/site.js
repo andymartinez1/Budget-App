@@ -71,4 +71,23 @@
     showModal('button[data-toggle="delete-modal"]', '#deleteModalPlaceholder', '#deleteModal');
 
 // Categories
+    showModal('button[data-toggle="create-category-modal"]',
+        '#createCategoryModalPlaceholder', '#createCategoryModal');
+
+    bindModalSave({
+        placeholderId: '#createCategoryModalPlaceholder',
+        dataSaveSelector: '[data-save="create-category-modal"]',
+        modalId: '#createCategoryModal',
+    });
+
+    showModal('button[data-toggle="edit-category-modal"]', '#editCategoryModalPlaceholder', '#editCategoryModal')
+
+    bindModalSave({
+        placeholderId: '#editCategoryModalPlaceholder',
+        dataSaveSelector: '[data-save="edit-category-modal"]',
+        modalId: '#editCategoryModal',
+    });
+
+    showModal('button[data-toggle="delete-category-modal"]', '#deleteCategoryModalPlaceholder', '#deleteCategoryModal');
+
 })

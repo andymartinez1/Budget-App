@@ -1,0 +1,31 @@
+﻿@model BudgetApp.Models.ViewModels.CategoryViewModel
+
+<div class="modal fade" tabindex="-1" role="dialog" id="deleteCategoryModal" aria-labelledby="deleteCategoryModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="deleteCategoryModalLabel">Delete Transaction</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this category?</p>
+                <dl>
+                    <dt>
+                        @Html.DisplayNameFor(c => c.Type)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(c => c.Type)
+                    </dd>
+                </dl>
+            </div>
+            <div class="modal-footer">
+                <form asp-action="Delete" method="post">
+                    <input type="hidden" asp-for="CategoryId"/>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

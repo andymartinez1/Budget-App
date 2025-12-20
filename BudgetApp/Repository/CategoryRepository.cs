@@ -28,9 +28,7 @@ public class CategoryRepository : ICategoryRepository
 
     public async Task<Category> GetCategoryByIdAsync(int id)
     {
-        var category = await _dbContext.Categories.FindAsync(id);
-
-        return category;
+        return await _dbContext.Categories.FindAsync(id);
     }
 
     public async Task UpdateCategoryAsync(Category category)

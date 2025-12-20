@@ -5,7 +5,7 @@ namespace BudgetApp.Models.ViewModels;
 
 public class TransactionViewModel
 {
-    public int Id { get; set; }
+    public int TransactionId { get; set; }
 
     public DateTime Date { get; set; }
 
