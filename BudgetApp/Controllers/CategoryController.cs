@@ -31,8 +31,6 @@ public class CategoryController : Controller
     // GET: Category/Create
     public async Task<IActionResult> Create()
     {
-        var categories = await _categoryService.GetAllCategoriesAsync();
-
         var categoryVm = new CategoryViewModel();
 
         return PartialView("_CreateCategoryModalPartial", categoryVm);
@@ -75,6 +73,10 @@ public class CategoryController : Controller
     {
         if (ModelState.IsValid)
         {
+            var categoryToUpdate = await _categoryService.GetCategoryByIdAsync(id);
+
+            categoryToUpdate.Type = categoryVm.Type;
+
             await _categoryService.UpdateCategoryAsync(id);
 
             return RedirectToAction(nameof(Index));
