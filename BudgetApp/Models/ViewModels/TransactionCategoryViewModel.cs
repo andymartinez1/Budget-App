@@ -9,13 +9,11 @@ public class TransactionCategoryViewModel
 
     public List<Category> Categories { get; set; } = [];
 
-    public List<SelectListItem> CategoriesSelectList { get; set; }
+    public IEnumerable<SelectListItem> CategoriesSelectList { get; set; }
 
-    [Display(Name = "Search")]
-    public string? SearchName { get; set; }
+    [Display(Name = "Search")] public string? SearchName { get; set; }
 
-    [Display(Name = "Category")]
-    public string? FilterCategory { get; set; }
+    [Display(Name = "Category")] public string? FilterCategory { get; set; }
 
     [DataType(DataType.Date)]
     [Display(Name = "Start Date")]

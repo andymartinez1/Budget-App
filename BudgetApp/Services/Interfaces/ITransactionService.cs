@@ -5,7 +5,7 @@ namespace BudgetApp.Services.Interfaces;
 
 public interface ITransactionService
 {
-    public Task AddTransactionAsync(TransactionViewModel transactionVm);
+    Task<Transaction> AddTransactionAsync(TransactionViewModel transactionVm);
 
     public Task<List<Transaction>> GetAllTransactionsAsync();
 

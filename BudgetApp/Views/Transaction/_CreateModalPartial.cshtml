@@ -9,6 +9,12 @@
             </div>
             <div class="modal-body">
                 <form id="createForm" method="post" asp-action="Create">
+                    @Html.AntiForgeryToken()
+
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <input asp-for="TransactionId" type="hidden"/>
+
                     <div class="form-group">
                         <label asp-for="Name" class="control-label"></label>
                         <input asp-for="Name" class="form-control"/>

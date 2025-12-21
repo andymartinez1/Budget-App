@@ -30,7 +30,7 @@ public class TransactionController : Controller
         var transactions = await _transactionService.GetAllTransactionsAsync();
         var categories = await _categoryService.GetAllCategoriesAsync();
 
-        // apply filters
+        // Apply filters
         if (!string.IsNullOrEmpty(filterCategory))
             transactions = transactions
                 .Where(t =>
@@ -62,7 +62,7 @@ public class TransactionController : Controller
             Transactions = transactions,
             SearchName = searchString,
             SearchStartDate = startDate,
-            SearchEndDate = endDate,
+            SearchEndDate = endDate
         };
         transactionVm.SetCategories(categories);
 
@@ -71,13 +71,13 @@ public class TransactionController : Controller
         var totalCount = transactions.Count();
         var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
 
-        // set paged items
+        // Set paged items
         transactionVm.Transactions = transactions
             .Skip((currentPage - 1) * pageSize)
             .Take(pageSize)
             .ToList();
 
-        // expose paging info to the view
+        // Expose paging info to the view
         ViewBag.CurrentPage = currentPage;
         ViewBag.TotalPages = totalPages;
 
@@ -95,7 +95,7 @@ public class TransactionController : Controller
             Amount = transaction.Amount,
             CategoryType = category.Type,
             Date = transaction.Date,
-            Name = transaction.Name,
+            Name = transaction.Name
         };
 
         return PartialView("_DetailsModalPartial", transactionVm);
@@ -114,17 +114,22 @@ public class TransactionController : Controller
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(
-        [Bind("Name, Date,Amount,CategoryId")] TransactionViewModel transactionVm
+        [Bind("TransactionId, Name, Date, Amount, CategoryId")]
+        TransactionViewModel transactionVm
     )
     {
-        if (ModelState.IsValid)
-        {
-            await _transactionService.AddTransactionAsync(transactionVm);
+        var created = await _transactionService.AddTransactionAsync(transactionVm);
 
-            return RedirectToAction(nameof(Index));
+        if (created == null)
+        {
+            var categories = await _categoryService.GetAllCategoriesAsync();
+            transactionVm.SetCategories(categories);
+            ModelState.AddModelError(string.Empty, "Unable to create transaction. Try again.");
+            return PartialView("_CreateModalPartial", transactionVm);
         }
 
-        return PartialView("_CreateModalPartial", transactionVm);
+        // return RedirectToAction(nameof(Index));
+        return Created();
     }
 
     [HttpGet]
@@ -144,27 +149,20 @@ public class TransactionController : Controller
     public async Task<IActionResult> Edit(
         int id,
         [Bind("TransactionId,Name,Date,Amount,CategoryId,Category")]
-            TransactionViewModel transactionVm
+        TransactionViewModel transactionVm
     )
     {
-        if (ModelState.IsValid)
-        {
-            var category = await _categoryService.GetCategoryByIdAsync(transactionVm.CategoryId);
+        var transactionToUpdate = await _transactionService.GetTransactionByIdAsync(id);
+        transactionToUpdate.TransactionId = id;
+        transactionToUpdate.Name = transactionVm.Name;
+        transactionToUpdate.Amount = transactionVm.Amount;
+        transactionToUpdate.Category = transactionVm.Category;
+        transactionToUpdate.Date = transactionVm.Date;
+        transactionToUpdate.CategoryId = transactionVm.CategoryId;
 
-            var transactionToUpdate = await _transactionService.GetTransactionByIdAsync(id);
-            transactionToUpdate.TransactionId = id;
-            transactionToUpdate.Name = transactionVm.Name;
-            transactionToUpdate.Amount = transactionVm.Amount;
-            transactionToUpdate.Category = transactionVm.Category;
-            transactionToUpdate.Date = transactionVm.Date;
-            transactionToUpdate.CategoryId = transactionVm.CategoryId;
+        await _transactionService.UpdateTransactionAsync(id);
 
-            await _transactionService.UpdateTransactionAsync(id);
-
-            return RedirectToAction(nameof(Index));
-        }
-
-        return PartialView("_EditModalPartial", transactionVm);
+        return Ok(transactionToUpdate);
     }
 
     [HttpGet]
@@ -178,7 +176,7 @@ public class TransactionController : Controller
             Amount = transaction.Amount,
             CategoryType = category.Type,
             Date = transaction.Date,
-            Name = transaction.Name,
+            Name = transaction.Name
         };
 
         return PartialView("_DeleteModalPartial", transactionVm);
