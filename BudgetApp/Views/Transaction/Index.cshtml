@@ -5,6 +5,10 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     var filterCategory = Model?.FilterCategory ?? "";
     var searchString = Model?.SearchName ?? "";
+    var startDate = Model?.SearchStartDate ?? "";
+    var endDate = Model?.SearchEndDate ?? "";
+
+//Pagination
     var current = ViewBag.CurrentPage as int? ?? 1;
     var total = ViewBag.TotalPages as int? ?? 1;
     var prevDisabled = current <= 1 ? "disabled" : "";
@@ -14,7 +18,7 @@
 
     string UrlFor(int page)
     {
-        return Url.Action("Index", "Transaction", new { filterCategory, searchString, pageNumber = page });
+        return Url.Action("Index", "Transaction", new { filterCategory, searchString, startDate, endDate, pageNumber = page });
     }
 
     var prevUrl = UrlFor(prevPage);
@@ -32,11 +36,34 @@
     </p>
 
     <form asp-controller="Transaction" asp-action="Index" method="get">
-        <div>
-            <select asp-for="FilterCategory" asp-items="Model.CategoriesSelectList">
-                <option value="">All Categories</option>
-            </select>
-            <input type="submit" value="Filter"/>
+        <div class="row g-2 align-items-end">
+            <div class="col-auto">
+                <label class="form-label">Category</label>
+                <select asp-for="FilterCategory" asp-items="Model.CategoriesSelectList" class="form-select">
+                    <option value="">All Categories</option>
+                </select>
+            </div>
+
+            <div class="col-auto">
+                <label class="form-label">From</label>
+                <input type="date" name="startDate" value="@startDate" class="form-control"/>
+            </div>
+
+            <div class="col-auto">
+                <label class="form-label">To</label>
+                <input type="date" name="endDate" value="@endDate" class="form-control"/>
+            </div>
+
+            <div class="col-auto">
+                <label class="form-label">Search</label>
+                <input type="text" name="searchString" value="@searchString" class="form-control"
+                       placeholder="Search transaction name"/>
+            </div>
+
+            <div class="col-auto">
+                <input type="submit" value="Filter" class="btn btn-primary"/>
+                <a href="@Url.Action("Index", "Transaction")" class="btn btn-secondary">Reset</a>
+            </div>
         </div>
     </form>
     <br/>
@@ -78,7 +105,8 @@
                     @Html.DisplayFor(modelItem => transaction.Date)
                 </td>
                 <td>
-                    <button class="btn btn-info" data-toggle="edit-transaction-modal" data-bs-target="#editTransactionModal"
+                    <button class="btn btn-info" data-toggle="edit-transaction-modal"
+                            data-bs-target="#editTransactionModal"
                             data-url="@Url.Action("Edit", "Transaction", new { id = transaction.TransactionId })"><i
                             class="bi bi-pencil-square"></i>
                     </button>

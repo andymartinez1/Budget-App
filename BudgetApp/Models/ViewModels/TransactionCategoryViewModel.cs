@@ -11,11 +11,21 @@ public class TransactionCategoryViewModel
 
     public List<SelectListItem> CategoriesSelectList { get; set; }
 
-    [Display(Name = "Filter")]
+    [Display(Name = "Search")]
     public string? SearchName { get; set; }
 
     [Display(Name = "Category")]
     public string? FilterCategory { get; set; }
+
+    [DataType(DataType.Date)]
+    [Display(Name = "Start Date")]
+    [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+    public string? SearchStartDate { get; set; }
+
+    [DataType(DataType.Date)]
+    [Display(Name = "End Date")]
+    [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+    public string? SearchEndDate { get; set; }
 
     public int PageIndex { get; set; }
 

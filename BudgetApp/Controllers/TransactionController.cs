@@ -22,7 +22,9 @@ public class TransactionController : Controller
     public async Task<IActionResult> Index(
         string filterCategory,
         string searchString,
-        int? pageNumber
+        string startDate,
+        string endDate,
+        int? pageNumber = 1
     )
     {
         var transactions = await _transactionService.GetAllTransactionsAsync();
@@ -45,11 +47,22 @@ public class TransactionController : Controller
                 )
                 .ToList();
 
+        if (!string.IsNullOrEmpty(startDate) && DateTime.TryParse(startDate, out var start))
+            transactions = transactions.Where(t => t.Date.Date >= start.Date).ToList();
+
+        if (!string.IsNullOrEmpty(endDate) && DateTime.TryParse(endDate, out var end))
+        {
+            var endOfDay = end.Date.AddDays(1).AddTicks(-1);
+            transactions = transactions.Where(t => t.Date <= endOfDay).ToList();
+        }
+
         var transactionVm = new TransactionCategoryViewModel
         {
             FilterCategory = filterCategory,
             Transactions = transactions,
             SearchName = searchString,
+            SearchStartDate = startDate,
+            SearchEndDate = endDate,
         };
         transactionVm.SetCategories(categories);
 
