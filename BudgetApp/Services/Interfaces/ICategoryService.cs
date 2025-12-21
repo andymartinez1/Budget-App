@@ -1,11 +1,11 @@
 ﻿using BudgetApp.Models;
-using Microsoft.AspNetCore.Mvc.Rendering;
+using BudgetApp.Models.ViewModels;
 
 namespace BudgetApp.Services.Interfaces;
 
 public interface ICategoryService
 {
-    public Task AddCategoryAsync(Category category);
+    public Task AddCategoryAsync(CategoryViewModel categoryVm);
 
     public Task<List<Category>> GetAllCategoriesAsync();
 
@@ -14,6 +14,4 @@ public interface ICategoryService
     public Task UpdateCategoryAsync(int id);
 
     public Task DeleteCategoryAsync(int id);
-
-    public SelectList GetCategorySelectList(List<Category> categories);
 }

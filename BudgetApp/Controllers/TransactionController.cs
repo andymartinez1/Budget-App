@@ -19,18 +19,54 @@ public class TransactionController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index(string filterCategory, string searchString)
+    public async Task<IActionResult> Index(
+        string filterCategory,
+        string searchString,
+        int? pageNumber
+    )
     {
         var transactions = await _transactionService.GetAllTransactionsAsync();
         var categories = await _categoryService.GetAllCategoriesAsync();
 
+        // apply filters
+        if (!string.IsNullOrEmpty(filterCategory))
+            transactions = transactions
+                .Where(t =>
+                    t.CategoryId.ToString() == filterCategory
+                    || (t.Category != null && t.Category.Type == filterCategory)
+                )
+                .ToList();
+
+        if (!string.IsNullOrEmpty(searchString))
+            transactions = transactions
+                .Where(t =>
+                    t.Name != null
+                    && t.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase)
+                )
+                .ToList();
+
         var transactionVm = new TransactionCategoryViewModel
         {
-            CategoriesSelectList = _categoryService.GetCategorySelectList(categories),
             FilterCategory = filterCategory,
             Transactions = transactions,
             SearchName = searchString,
         };
+        transactionVm.SetCategories(categories);
+
+        var pageSize = 7;
+        var currentPage = pageNumber ?? 1;
+        var totalCount = transactions.Count();
+        var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+
+        // set paged items
+        transactionVm.Transactions = transactions
+            .Skip((currentPage - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
+
+        // expose paging info to the view
+        ViewBag.CurrentPage = currentPage;
+        ViewBag.TotalPages = totalPages;
 
         return View(transactionVm);
     }
@@ -44,7 +80,7 @@ public class TransactionController : Controller
         var transactionVm = new TransactionViewModel
         {
             Amount = transaction.Amount,
-            Category = category.Type,
+            CategoryType = category.Type,
             Date = transaction.Date,
             Name = transaction.Name,
         };
@@ -57,10 +93,7 @@ public class TransactionController : Controller
     {
         var categories = await _categoryService.GetAllCategoriesAsync();
 
-        var transactionVm = new TransactionViewModel
-        {
-            Categories = _categoryService.GetCategorySelectList(categories),
-        };
+        var transactionVm = new TransactionViewModel(categories);
 
         return PartialView("_CreateModalPartial", transactionVm);
     }
@@ -68,21 +101,12 @@ public class TransactionController : Controller
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(
-        [Bind("TransactionId,Name, Date,Amount,CategoryId")] TransactionViewModel transactionVm
+        [Bind("Name, Date,Amount,CategoryId")] TransactionViewModel transactionVm
     )
     {
         if (ModelState.IsValid)
         {
-            var transaction = await _transactionService.AddTransactionAsync(transactionVm);
-
-            var newTransactionVm = new TransactionViewModel
-            {
-                TransactionId = transaction.TransactionId,
-                Name = transaction.Name,
-                Date = transaction.Date,
-                Amount = transaction.Amount,
-                CategoryId = transaction.CategoryId,
-            };
+            await _transactionService.AddTransactionAsync(transactionVm);
 
             return RedirectToAction(nameof(Index));
         }
@@ -96,15 +120,8 @@ public class TransactionController : Controller
         var transactionToUpdate = await _transactionService.GetTransactionByIdAsync(id);
         var categories = await _categoryService.GetAllCategoriesAsync();
 
-        var transactionVm = new TransactionViewModel
-        {
-            TransactionId = transactionToUpdate.TransactionId,
-            Amount = transactionToUpdate.Amount,
-            Date = transactionToUpdate.Date,
-            Name = transactionToUpdate.Name,
-            CategoryId = transactionToUpdate.CategoryId,
-            Categories = _categoryService.GetCategorySelectList(categories),
-        };
+        var transactionVm = new TransactionViewModel(transactionToUpdate);
+        transactionVm.SetCategories(categories);
 
         return PartialView("_EditModalPartial", transactionVm);
     }
@@ -112,19 +129,24 @@ public class TransactionController : Controller
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(
-        [Bind("TransactionId,Name,Date,Amount,Category,Categories")]
+        int id,
+        [Bind("TransactionId,Name,Date,Amount,CategoryId,Category")]
             TransactionViewModel transactionVm
     )
     {
         if (ModelState.IsValid)
         {
             var category = await _categoryService.GetCategoryByIdAsync(transactionVm.CategoryId);
-            if (category is null)
-                return NotFound();
 
-            transactionVm.CategoryViewModel = new CategoryViewModel();
+            var transactionToUpdate = await _transactionService.GetTransactionByIdAsync(id);
+            transactionToUpdate.TransactionId = id;
+            transactionToUpdate.Name = transactionVm.Name;
+            transactionToUpdate.Amount = transactionVm.Amount;
+            transactionToUpdate.Category = transactionVm.Category;
+            transactionToUpdate.Date = transactionVm.Date;
+            transactionToUpdate.CategoryId = transactionVm.CategoryId;
 
-            await _transactionService.UpdateTransactionAsync(transactionVm.TransactionId);
+            await _transactionService.UpdateTransactionAsync(id);
 
             return RedirectToAction(nameof(Index));
         }
@@ -141,7 +163,7 @@ public class TransactionController : Controller
         var transactionVm = new TransactionViewModel
         {
             Amount = transaction.Amount,
-            Category = category.Type,
+            CategoryType = category.Type,
             Date = transaction.Date,
             Name = transaction.Name,
         };

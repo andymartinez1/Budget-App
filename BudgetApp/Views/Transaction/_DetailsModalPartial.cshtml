@@ -1,6 +1,6 @@
 @model BudgetApp.Models.ViewModels.TransactionViewModel
 
-<div class="modal fade" tabindex="-1" role="dialog" id="detailModal" aria-labelledby="detailModalLabel"
+<div class="modal fade" tabindex="-1" role="dialog" id="transactionDetailModal" aria-labelledby="detailModalLabel"
      aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -17,10 +17,10 @@
                         @Html.DisplayFor(t => t.Name)
                     </dd>
                     <dt>
-                        @Html.DisplayNameFor(t => t.Category)
+                        @Html.DisplayNameFor(t => t.CategoryType)
                     </dt>
                     <dd>
-                        @Html.DisplayFor(t => t.Category)
+                        @Html.DisplayFor(t => t.CategoryType)
                     </dd>
                     <dt>
                         @Html.DisplayNameFor(t => t.Amount)

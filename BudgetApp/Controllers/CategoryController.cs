@@ -1,4 +1,3 @@
-using BudgetApp.Models;
 using BudgetApp.Models.ViewModels;
 using BudgetApp.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -21,9 +20,9 @@ public class CategoryController : Controller
         var categoryVm = new TransactionCategoryViewModel
         {
             Categories = categories,
-            CategoriesSelectList = _categoryService.GetCategorySelectList(categories),
             SearchName = searchString,
         };
+        categoryVm.SetCategories(categories);
 
         return View(categoryVm);
     }
@@ -43,9 +42,7 @@ public class CategoryController : Controller
     {
         if (ModelState.IsValid)
         {
-            var category = new Category { Type = categoryVm.Type };
-
-            await _categoryService.AddCategoryAsync(category);
+            await _categoryService.AddCategoryAsync(categoryVm);
 
             return RedirectToAction(nameof(Index));
         }
@@ -74,7 +71,6 @@ public class CategoryController : Controller
         if (ModelState.IsValid)
         {
             var categoryToUpdate = await _categoryService.GetCategoryByIdAsync(id);
-
             categoryToUpdate.Type = categoryVm.Type;
 
             await _categoryService.UpdateCategoryAsync(id);

@@ -19,7 +19,7 @@ public class TransactionService : ITransactionService
         _categoryRepository = categoryRepository;
     }
 
-    public async Task<Transaction> AddTransactionAsync(TransactionViewModel transactionVm)
+    public async Task AddTransactionAsync(TransactionViewModel transactionVm)
     {
         var transaction = new Transaction
         {
@@ -30,8 +30,6 @@ public class TransactionService : ITransactionService
         };
 
         await _transactionRepository.AddTransactionAsync(transaction);
-
-        return transaction;
     }
 
     public async Task<List<Transaction>> GetAllTransactionsAsync()

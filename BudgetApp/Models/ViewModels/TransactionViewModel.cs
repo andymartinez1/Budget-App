@@ -5,6 +5,25 @@ namespace BudgetApp.Models.ViewModels;
 
 public class TransactionViewModel
 {
+    public TransactionViewModel() { }
+
+    public TransactionViewModel(List<Category> categories)
+    {
+        Categories = categories
+            .Select(c => new SelectListItem { Value = c.CategoryId.ToString(), Text = c.Type })
+            .ToList();
+    }
+
+    public TransactionViewModel(Transaction transaction)
+    {
+        TransactionId = transaction.TransactionId;
+        Date = transaction.Date;
+        Name = transaction.Name;
+        Amount = transaction.Amount;
+        CategoryId = transaction.CategoryId;
+        Category = transaction.Category;
+    }
+
     public int TransactionId { get; set; }
 
     public DateTime Date { get; set; }
@@ -19,9 +38,16 @@ public class TransactionViewModel
     [Display(Name = "Category")]
     public int CategoryId { get; set; }
 
-    public string Category { get; set; }
+    public string CategoryType { get; set; }
 
-    public CategoryViewModel CategoryViewModel { get; set; }
+    public Category Category { get; set; }
 
-    public SelectList Categories { get; set; }
+    public List<SelectListItem> Categories { get; set; }
+
+    public void SetCategories(List<Category> categories)
+    {
+        Categories = categories
+            .Select(c => new SelectListItem { Value = c.CategoryId.ToString(), Text = c.Type })
+            .ToList();
+    }
 }
