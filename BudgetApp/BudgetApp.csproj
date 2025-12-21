@@ -20,4 +20,7 @@
     <_ContentIncludedByDefault Remove="Views\TransactionOld\_Create.cshtml" />
     <_ContentIncludedByDefault Remove="Views\TransactionOld\_Details.cshtml" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="docs\images\" />
+  </ItemGroup>
 </Project>
