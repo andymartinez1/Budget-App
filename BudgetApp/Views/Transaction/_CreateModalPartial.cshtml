@@ -32,8 +32,10 @@
                     </div>
                     <div class="form-group">
                         <label asp-for="Date" class="control-label"></label>
-                        <input asp-for="Date" class="form-control"/>
+                        <input type="datetime-local" asp-for="Date" class="form-control"
+                               value="@(Model.Date == default ? DateTime.Now.ToLocalTime().ToString("yyyy-MM-ddTHH:mm") : Model.Date.ToLocalTime().ToString("yyyy-MM-ddTHH:mm"))"/>
                         <span asp-validation-for="Date" class="text-danger"></span>
+
                     </div>
                 </form>
             </div>
