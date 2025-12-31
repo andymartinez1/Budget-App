@@ -2,6 +2,10 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetApp", "BudgetApp\BudgetApp.csproj", "{DC7D002F-8D14-445A-81F0-E7731B6DDCC1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetApp.UnitTests", "BudgetApp.UnitTests\BudgetApp.UnitTests.csproj", "{B76AF43F-3A4C-4F29-B4A3-9AF923423BAE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetApp.IntegrationTests", "BudgetApp.IntegrationTests\BudgetApp.IntegrationTests.csproj", "{F5073C0F-918E-40F6-B67C-402557A446B4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +16,13 @@ Global
 		{DC7D002F-8D14-445A-81F0-E7731B6DDCC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DC7D002F-8D14-445A-81F0-E7731B6DDCC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DC7D002F-8D14-445A-81F0-E7731B6DDCC1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B76AF43F-3A4C-4F29-B4A3-9AF923423BAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B76AF43F-3A4C-4F29-B4A3-9AF923423BAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B76AF43F-3A4C-4F29-B4A3-9AF923423BAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B76AF43F-3A4C-4F29-B4A3-9AF923423BAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5073C0F-918E-40F6-B67C-402557A446B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5073C0F-918E-40F6-B67C-402557A446B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5073C0F-918E-40F6-B67C-402557A446B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5073C0F-918E-40F6-B67C-402557A446B4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
