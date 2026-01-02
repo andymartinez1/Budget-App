@@ -1,8 +1,10 @@
 using BudgetApp.Data;
+using BudgetApp.Models;
 using BudgetApp.Repository;
 using BudgetApp.Repository.Interfaces;
 using BudgetApp.Services;
 using BudgetApp.Services.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +14,19 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<BudgetDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("BudgetDbContext"))
 );
+
+builder
+    .Services.AddIdentity<BudgetUser, IdentityRole>(options =>
+    {
+        options.Password.RequiredLength = 8;
+        options.User.RequireUniqueEmail = true;
+        options.SignIn.RequireConfirmedAccount = false;
+        options.SignIn.RequireConfirmedEmail = false;
+        options.SignIn.RequireConfirmedPhoneNumber = false;
+    })
+    .AddEntityFrameworkStores<BudgetDbContext>()
+    .AddDefaultTokenProviders();
+
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();

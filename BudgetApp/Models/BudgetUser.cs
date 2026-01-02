@@ -2,4 +2,7 @@
 
 namespace BudgetApp.Models;
 
-public class BudgetUser : IdentityUser { }
+public class BudgetUser : IdentityUser
+{
+    public string FullName { get; set; } = string.Empty;
+}
