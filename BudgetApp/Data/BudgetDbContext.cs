@@ -1,9 +1,10 @@
 ﻿using BudgetApp.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace BudgetApp.Data;
 
-public class BudgetDbContext : DbContext
+public class BudgetDbContext : IdentityDbContext<BudgetUser>
 {
     public BudgetDbContext(DbContextOptions<BudgetDbContext> options)
         : base(options) { }
