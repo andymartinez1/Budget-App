@@ -25,7 +25,7 @@ body {
 }
 
 .table {
-    border-radius: 6px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12), 0 1px 3px rgba(37, 140, 251, 0.08);
 }
 
 .footer {
@@ -34,7 +34,6 @@ body {
 }
 
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-    color: var(--bs-secondary-color);
     text-align: end;
 }
 
