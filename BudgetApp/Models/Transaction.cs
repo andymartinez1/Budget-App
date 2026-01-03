@@ -5,8 +5,7 @@ namespace BudgetApp.Models;
 
 public class Transaction
 {
-    [Key]
-    public int TransactionId { get; set; }
+    [Key] public int TransactionId { get; set; }
 
     [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy HH:mm}", ApplyFormatInEditMode = true)]
     [DataType(DataType.Date)]
@@ -14,8 +13,7 @@ public class Transaction
 
     public string Name { get; set; } = string.Empty;
 
-    [Column(TypeName = "decimal(18, 2)")]
-    public decimal Amount { get; set; }
+    [Column(TypeName = "decimal(18, 2)")] public decimal Amount { get; set; }
 
     public int CategoryId { get; set; }
 

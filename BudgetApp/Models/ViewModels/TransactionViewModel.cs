@@ -5,7 +5,9 @@ namespace BudgetApp.Models.ViewModels;
 
 public class TransactionViewModel
 {
-    public TransactionViewModel() { }
+    public TransactionViewModel()
+    {
+    }
 
     public TransactionViewModel(List<Category> categories)
     {
@@ -36,8 +38,7 @@ public class TransactionViewModel
     [Required]
     public decimal Amount { get; set; }
 
-    [Display(Name = "Category")]
-    public int CategoryId { get; set; }
+    [Display(Name = "Category")] public int CategoryId { get; set; }
 
     public string CategoryType { get; set; }
 

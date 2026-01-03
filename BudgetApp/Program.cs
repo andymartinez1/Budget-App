@@ -11,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddHttpLogging();
 builder.Services.AddDbContext<BudgetDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("BudgetDbContext"))
 );
@@ -38,8 +39,8 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    SeedCategoryData.InitializeCategories(services);
-    SeedTransactionData.InitializeTransactions(services);
+    SeedDatabase.InitializeTransactions(services);
+    app.Logger.LogInformation(1, "Database seeded and ready.");
 }
 
 // Configure the HTTP request pipeline.
@@ -52,6 +53,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseRouting();
+app.UseHttpLogging();
 
 app.MapStaticAssets();
 

@@ -7,16 +7,13 @@ namespace BudgetApp.Services;
 
 public class TransactionService : ITransactionService
 {
-    private readonly ICategoryRepository _categoryRepository;
     private readonly ITransactionRepository _transactionRepository;
 
     public TransactionService(
-        ITransactionRepository transactionRepository,
-        ICategoryRepository categoryRepository
+        ITransactionRepository transactionRepository
     )
     {
         _transactionRepository = transactionRepository;
-        _categoryRepository = categoryRepository;
     }
 
     public async Task<Transaction> AddTransactionAsync(TransactionViewModel transactionVm)
@@ -26,7 +23,7 @@ public class TransactionService : ITransactionService
             Name = transactionVm.Name,
             Date = transactionVm.Date,
             Amount = transactionVm.Amount,
-            CategoryId = transactionVm.CategoryId,
+            CategoryId = transactionVm.CategoryId
         };
 
         await _transactionRepository.AddTransactionAsync(transaction);

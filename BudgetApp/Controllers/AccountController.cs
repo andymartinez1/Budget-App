@@ -7,16 +7,19 @@ namespace BudgetApp.Controllers;
 
 public class AccountController : Controller
 {
+    private readonly ILogger<AccountController> _logger;
     private readonly SignInManager<BudgetUser> _signInManager;
     private readonly UserManager<BudgetUser> _userManager;
 
     public AccountController(
         SignInManager<BudgetUser> signInManager,
-        UserManager<BudgetUser> userManager
+        UserManager<BudgetUser> userManager,
+        ILogger<AccountController> logger
     )
     {
         _signInManager = signInManager;
         _userManager = userManager;
+        _logger = logger;
     }
 
     public IActionResult Login()
@@ -37,7 +40,10 @@ public class AccountController : Controller
             );
 
             if (result.Succeeded)
+            {
+                _logger.LogInformation("User {User} has logged in.", loginVm.Email);
                 return RedirectToAction("Index", "Home");
+            }
 
             ModelState.AddModelError("", "Email or password is incorrect.");
         }
@@ -139,7 +145,11 @@ public class AccountController : Controller
 
     public async Task<IActionResult> Logout()
     {
+        var username = User?.Identity?.Name ?? "Unknown";
+
         await _signInManager.SignOutAsync();
+        _logger.LogInformation("User {User} has logged out.", username);
+
         return RedirectToAction("Index", "Home");
     }
 }

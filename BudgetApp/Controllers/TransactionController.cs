@@ -7,15 +7,18 @@ namespace BudgetApp.Controllers;
 public class TransactionController : Controller
 {
     private readonly ICategoryService _categoryService;
+    private readonly ILogger<TransactionController> _logger;
     private readonly ITransactionService _transactionService;
 
     public TransactionController(
         ITransactionService transactionService,
-        ICategoryService categoryService
+        ICategoryService categoryService,
+        ILogger<TransactionController> logger
     )
     {
         _transactionService = transactionService;
         _categoryService = categoryService;
+        _logger = logger;
     }
 
     [HttpGet]

@@ -7,7 +7,9 @@ namespace BudgetApp.Data;
 public class BudgetDbContext : IdentityDbContext<BudgetUser>
 {
     public BudgetDbContext(DbContextOptions<BudgetDbContext> options)
-        : base(options) { }
+        : base(options)
+    {
+    }
 
     public DbSet<Category> Categories { get; set; }
     public DbSet<Transaction> Transactions { get; set; }

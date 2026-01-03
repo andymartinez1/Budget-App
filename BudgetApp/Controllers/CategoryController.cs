@@ -20,7 +20,7 @@ public class CategoryController : Controller
         var categoryVm = new TransactionCategoryViewModel
         {
             Categories = categories,
-            SearchName = searchString,
+            SearchName = searchString
         };
         categoryVm.SetCategories(categories);
 

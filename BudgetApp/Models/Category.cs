@@ -4,11 +4,9 @@ namespace BudgetApp.Models;
 
 public class Category
 {
-    [Key]
-    public int CategoryId { get; set; }
+    [Key] public int CategoryId { get; set; }
 
-    [Display(Name = "Category")]
-    public string Type { get; set; } = string.Empty;
+    [Display(Name = "Category")] public string Type { get; set; } = string.Empty;
 
     public ICollection<Transaction> Transactions { get; set; }
 }

@@ -9,7 +9,9 @@ public class CategoryViewModel
         Transactions = [];
     }
 
-    public CategoryViewModel() { }
+    public CategoryViewModel()
+    {
+    }
 
     public int CategoryId { get; set; }
 
