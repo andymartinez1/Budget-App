@@ -14,15 +14,29 @@ public class CategoryController : Controller
     }
 
     // GET: Category
-    public async Task<IActionResult> Index(string searchString)
+    public async Task<IActionResult> Index(int? pageNumber = 1)
     {
         var categories = await _categoryService.GetAllCategoriesAsync();
         var categoryVm = new TransactionCategoryViewModel
         {
             Categories = categories,
-            SearchName = searchString
         };
         categoryVm.SetCategories(categories);
+
+        var pageSize = 7;
+        var currentPage = pageNumber ?? 1;
+        var totalCount = categories.Count();
+        var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+
+        // Set paged items
+        categoryVm.Categories = categories
+            .Skip((currentPage - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
+
+        // Expose paging info to the view
+        ViewBag.CurrentPage = currentPage;
+        ViewBag.TotalPages = totalPages;
 
         return View(categoryVm);
     }

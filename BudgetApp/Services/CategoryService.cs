@@ -8,10 +8,12 @@ namespace BudgetApp.Services;
 public class CategoryService : ICategoryService
 {
     private readonly ICategoryRepository _categoryRepository;
+    private readonly ILogger<CategoryService> _logger;
 
-    public CategoryService(ICategoryRepository categoryRepository)
+    public CategoryService(ICategoryRepository categoryRepository, ILogger<CategoryService> logger)
     {
         _categoryRepository = categoryRepository;
+        _logger = logger;
     }
 
     public async Task AddCategoryAsync(CategoryViewModel categoryVm)
@@ -19,6 +21,7 @@ public class CategoryService : ICategoryService
         var category = new Category { Type = categoryVm.Type };
 
         await _categoryRepository.AddCategoryAsync(category);
+        _logger.LogInformation("Category '{Type}' created.", category.Type);
     }
 
     public async Task<List<Category>> GetAllCategoriesAsync()
@@ -29,6 +32,7 @@ public class CategoryService : ICategoryService
     public async Task<Category> GetCategoryByIdAsync(int id)
     {
         var category = await _categoryRepository.GetCategoryByIdAsync(id);
+        _logger.LogInformation("Category with ID: {CategoryId} retrieved.", category.CategoryId);
 
         return category;
     }
@@ -36,6 +40,7 @@ public class CategoryService : ICategoryService
     public async Task DeleteCategoryAsync(int id)
     {
         await _categoryRepository.DeleteCategoryAsync(id);
+        _logger.LogInformation("Category with ID: {CategoryId} deleted.", id);
     }
 
     public async Task UpdateCategoryAsync(int id)
@@ -43,5 +48,6 @@ public class CategoryService : ICategoryService
         var category = await GetCategoryByIdAsync(id);
 
         await _categoryRepository.UpdateCategoryAsync(category);
+        _logger.LogInformation("Category with ID: {CategoryId} updated.", category.CategoryId);
     }
 }
