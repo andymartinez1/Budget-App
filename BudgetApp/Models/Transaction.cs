@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BudgetApp.Models;
 
@@ -13,6 +14,7 @@ public class Transaction
 
     public string Name { get; set; } = string.Empty;
 
+    [Column(TypeName = "decimal(18, 2)")]
     public decimal Amount { get; set; }
 
     public int CategoryId { get; set; }

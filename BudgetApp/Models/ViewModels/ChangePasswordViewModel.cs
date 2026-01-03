@@ -12,10 +12,10 @@ public class ChangePasswordViewModel
     [StringLength(
         40,
         MinimumLength = 8,
-        ErrorMessage = "The {0} must be at {2} and at max {1} characters in length."
+        ErrorMessage = "The {0} must be at least {2} and at max {1} characters in length."
     )]
     [DataType(DataType.Password)]
-    [Display(Name = "Confirm Password")]
+    [Display(Name = "New Password")]
     [Compare("ConfirmNewPassword", ErrorMessage = "Password does not match.")]
     public string NewPassword { get; set; } = string.Empty;
 

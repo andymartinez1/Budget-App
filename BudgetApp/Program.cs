@@ -55,7 +55,6 @@ app.UseRouting();
 
 app.MapStaticAssets();
 
-app.MapControllerRoute("default", "{controller=Transaction}/{action=Index}/{id?}")
-    .WithStaticAssets();
+app.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}").WithStaticAssets();
 
 app.Run();
