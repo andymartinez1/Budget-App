@@ -36,7 +36,7 @@ public class TransactionViewModel
     [DataType(DataType.Currency)]
     [Range(0.01, (double)decimal.MaxValue)]
     [Required]
-    public decimal Amount { get; set; }
+    public decimal? Amount { get; set; }
 
     [Display(Name = "Category")] public int CategoryId { get; set; }
 

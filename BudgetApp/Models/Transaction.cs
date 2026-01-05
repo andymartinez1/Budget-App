@@ -11,9 +11,10 @@ public class Transaction
     [DataType(DataType.Date)]
     public DateTime Date { get; set; } = DateTime.Now;
 
+    [StringLength(30, ErrorMessage = "Name cannot exceed 30 characters.")]
     public string Name { get; set; } = string.Empty;
 
-    [Column(TypeName = "decimal(18, 2)")] public decimal Amount { get; set; }
+    [Column(TypeName = "decimal(18, 2)")] public decimal? Amount { get; set; }
 
     public int CategoryId { get; set; }
 
