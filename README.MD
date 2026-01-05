@@ -6,9 +6,11 @@ categorizing spending patterns, and gaining insights into their money flow. Whet
 monitoring income sources, or analyzing spending habits, this app provides the tools you need to maintain financial
 awareness and make informed decisions about your budget.
 
+![Home.gif](BudgetApp/docs/images/Home.gif)
+
 #### Manage Transactions:
 
-![TransactionsHome.gif](BudgetApp/docs/images/TransactionsHome.gif)
+![TransactionsHome.png](BudgetApp/docs/images/TransactionsHome.png)
 
 #### Manage Categories:
 
@@ -16,6 +18,7 @@ awareness and make informed decisions about your budget.
 
 ## Features
 
+- Authentication
 - Create and manage transactions
 - Track income and expenses
 - Categorize transactions
@@ -67,8 +70,16 @@ awareness and make informed decisions about your budget.
    dotnet run
    ```
 
+> [!IMPORTANT]
+> **Note:** You can register for an account or use the default user account created in Identity:
+>
+> Username: test@test.com
+>
+> Password: Password1!
+
 ## Tech Stack
 
 - ASP.NET Core MVC
+- Identity
 - .NET 10
 - MSSQL LocalDB 
