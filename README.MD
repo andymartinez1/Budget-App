@@ -71,7 +71,7 @@ awareness and make informed decisions about your budget.
    ```
 
 > [!IMPORTANT]
-> **Note:** You can register for an account or use the default user account created in Identity:
+> You must be signed in to view and edit the transactions. You can register for an account or use the default user account created in Identity:
 >
 > Username: test@test.com
 >
