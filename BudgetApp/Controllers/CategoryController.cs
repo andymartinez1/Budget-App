@@ -1,26 +1,27 @@
 using BudgetApp.Models.ViewModels;
 using BudgetApp.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BudgetApp.Controllers;
 
+[Authorize]
 public class CategoryController : Controller
 {
     private readonly ICategoryService _categoryService;
+    private readonly ILogger<CategoryController> _logger;
 
-    public CategoryController(ICategoryService categoryService)
+    public CategoryController(ICategoryService categoryService, ILogger<CategoryController> logger)
     {
         _categoryService = categoryService;
+        _logger = logger;
     }
 
     // GET: Category
     public async Task<IActionResult> Index(int? pageNumber = 1)
     {
         var categories = await _categoryService.GetAllCategoriesAsync();
-        var categoryVm = new TransactionCategoryViewModel
-        {
-            Categories = categories,
-        };
+        var categoryVm = new TransactionCategoryViewModel { Categories = categories };
         categoryVm.SetCategories(categories);
 
         var pageSize = 7;
@@ -82,17 +83,19 @@ public class CategoryController : Controller
         [Bind("CategoryId,Type")] CategoryViewModel categoryVm
     )
     {
-        if (ModelState.IsValid)
-        {
-            var categoryToUpdate = await _categoryService.GetCategoryByIdAsync(id);
-            categoryToUpdate.Type = categoryVm.Type;
+        if (!ModelState.IsValid)
+            return PartialView("_EditCategoryModalPartial", categoryVm);
 
-            await _categoryService.UpdateCategoryAsync(id);
+        var categoryToUpdate = await _categoryService.GetCategoryByIdAsync(id);
+        categoryToUpdate.Type = categoryVm.Type;
 
-            return RedirectToAction(nameof(Index));
-        }
+        await _categoryService.UpdateCategoryAsync(id);
 
-        return PartialView("_EditCategoryModalPartial", categoryVm);
+        return CreatedAtAction(
+            nameof(Index),
+            new { id = categoryToUpdate.CategoryId },
+            categoryToUpdate
+        );
     }
 
     // GET: Category/Delete/5

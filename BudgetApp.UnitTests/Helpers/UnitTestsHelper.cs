@@ -18,26 +18,6 @@ public class UnitTestsHelper
         _transactionId = transactionId;
     }
 
-    internal static Mock<ITransactionService> GetTransactionServiceMock(int id)
-    {
-        var mockTransactionService = new Mock<ITransactionService>();
-        mockTransactionService
-            .Setup(s => s.GetTransactionByIdAsync(id));
-        return mockTransactionService;
-    }
-
-    internal static Mock<ICategoryService> GetCategoryServiceMock(int id)
-    {
-        var mockCategoryService = new Mock<ICategoryService>();
-        mockCategoryService.Setup(c => c.GetCategoryByIdAsync(id));
-        return mockCategoryService;
-    }
-
-    internal static Mock<ILogger<TransactionController>> GetLoggerMock()
-    {
-        var mockLogger = new Mock<ILogger<TransactionController>>();
-        return mockLogger;
-    }
 
     public static (TransactionController Controller,
         Mock<ITransactionService> TransactionMock,
@@ -51,6 +31,19 @@ public class UnitTestsHelper
 
         var controller = new TransactionController(txMock.Object, catMock.Object, logMock.Object);
         return (controller, txMock, catMock, logMock);
+    }
+
+    public static (CategoryController Controller,
+        Mock<ICategoryService> CategoryMock,
+        Mock<ILogger<CategoryController>> LoggerMock)
+        CreateCategoryControllerWithMocks()
+    {
+        var txMock = new Mock<ITransactionService>();
+        var catMock = new Mock<ICategoryService>();
+        var logMock = new Mock<ILogger<CategoryController>>();
+
+        var controller = new CategoryController(catMock.Object, logMock.Object);
+        return (controller, catMock, logMock);
     }
 
     internal static Category GetTestCategory()
@@ -90,5 +83,11 @@ public class UnitTestsHelper
             Name = transaction.Name
         };
         return transactionVm;
+    }
+
+    internal static CategoryViewModel GetCategoryViewModel()
+    {
+        var categoryVm = new CategoryViewModel();
+        return categoryVm;
     }
 }

@@ -56,6 +56,9 @@ app.UseHttpLogging();
 
 app.MapStaticAssets();
 
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}").WithStaticAssets();
 
 app.Run();

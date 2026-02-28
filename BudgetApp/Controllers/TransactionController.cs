@@ -1,9 +1,11 @@
 using BudgetApp.Models.ViewModels;
 using BudgetApp.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BudgetApp.Controllers;
 
+[Authorize]
 public class TransactionController : Controller
 {
     private readonly ICategoryService _categoryService;
@@ -65,7 +67,7 @@ public class TransactionController : Controller
             Transactions = transactions,
             SearchName = searchString,
             SearchStartDate = startDate,
-            SearchEndDate = endDate
+            SearchEndDate = endDate,
         };
         transactionVm.SetCategories(categories);
 
@@ -98,7 +100,7 @@ public class TransactionController : Controller
             Amount = transaction.Amount,
             CategoryType = category.Type,
             Date = transaction.Date,
-            Name = transaction.Name
+            Name = transaction.Name,
         };
 
         return PartialView("_DetailsModalPartial", transactionVm);
@@ -117,8 +119,7 @@ public class TransactionController : Controller
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(
-        [Bind("TransactionId, Name, Date, Amount, CategoryId")]
-        TransactionViewModel transactionVm
+        [Bind("TransactionId, Name, Date, Amount, CategoryId")] TransactionViewModel transactionVm
     )
     {
         var created = await _transactionService.AddTransactionAsync(transactionVm);
@@ -151,7 +152,7 @@ public class TransactionController : Controller
     public async Task<IActionResult> Edit(
         int id,
         [Bind("TransactionId,Name,Date,Amount,CategoryId,Category")]
-        TransactionViewModel transactionVm
+            TransactionViewModel transactionVm
     )
     {
         var transactionToUpdate = await _transactionService.GetTransactionByIdAsync(id);
@@ -164,7 +165,11 @@ public class TransactionController : Controller
 
         await _transactionService.UpdateTransactionAsync(id);
 
-        return Ok(transactionToUpdate);
+        return CreatedAtAction(
+            nameof(Details),
+            new { id = transactionToUpdate.TransactionId },
+            transactionToUpdate
+        );
     }
 
     [HttpGet]
@@ -178,7 +183,7 @@ public class TransactionController : Controller
             Amount = transaction.Amount,
             CategoryType = category.Type,
             Date = transaction.Date,
-            Name = transaction.Name
+            Name = transaction.Name,
         };
 
         return PartialView("_DeleteModalPartial", transactionVm);
