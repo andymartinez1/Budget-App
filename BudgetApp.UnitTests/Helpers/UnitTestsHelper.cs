@@ -18,12 +18,12 @@ public class UnitTestsHelper
         _transactionId = transactionId;
     }
 
-
-    public static (TransactionController Controller,
+    public static (
+        TransactionController Controller,
         Mock<ITransactionService> TransactionMock,
         Mock<ICategoryService> CategoryMock,
-        Mock<ILogger<TransactionController>> LoggerMock)
-        CreateTransactionControllerWithMocks()
+        Mock<ILogger<TransactionController>> LoggerMock
+    ) CreateTransactionControllerWithMocks()
     {
         var txMock = new Mock<ITransactionService>();
         var catMock = new Mock<ICategoryService>();
@@ -33,10 +33,11 @@ public class UnitTestsHelper
         return (controller, txMock, catMock, logMock);
     }
 
-    public static (CategoryController Controller,
+    public static (
+        CategoryController Controller,
         Mock<ICategoryService> CategoryMock,
-        Mock<ILogger<CategoryController>> LoggerMock)
-        CreateCategoryControllerWithMocks()
+        Mock<ILogger<CategoryController>> LoggerMock
+    ) CreateCategoryControllerWithMocks()
     {
         var txMock = new Mock<ITransactionService>();
         var catMock = new Mock<ICategoryService>();
@@ -48,11 +49,7 @@ public class UnitTestsHelper
 
     internal static Category GetTestCategory()
     {
-        var category = new Category
-        {
-            CategoryId = 42,
-            Type = "Sample"
-        };
+        var category = new Category { CategoryId = 42, Type = "Sample" };
         return category;
     }
 
@@ -64,7 +61,7 @@ public class UnitTestsHelper
             CategoryId = 42,
             Amount = 100m,
             Date = DateTime.UtcNow,
-            Name = "Test"
+            Name = "Test",
         };
         return transaction;
     }
@@ -80,7 +77,7 @@ public class UnitTestsHelper
             Amount = transaction.Amount,
             CategoryType = category.Type,
             Date = transaction.Date,
-            Name = transaction.Name
+            Name = transaction.Name,
         };
         return transactionVm;
     }

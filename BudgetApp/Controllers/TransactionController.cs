@@ -32,8 +32,8 @@ public class TransactionController : Controller
         int? pageNumber = 1
     )
     {
-        var transactions = await _transactionService.GetAllTransactionsAsync();
-        var categories = await _categoryService.GetAllCategoriesAsync();
+        var transactions = await _transactionService.GetAllAsync();
+        var categories = await _categoryService.GetAllAsync();
 
         // Apply filters
         if (!string.IsNullOrEmpty(filterCategory))
@@ -92,8 +92,8 @@ public class TransactionController : Controller
     [HttpGet]
     public async Task<IActionResult> Details(int id)
     {
-        var transaction = await _transactionService.GetTransactionByIdAsync(id);
-        var category = await _categoryService.GetCategoryByIdAsync(transaction.CategoryId);
+        var transaction = await _transactionService.GetByIdAsync(id);
+        var category = await _categoryService.GetByIdAsync(transaction.CategoryId);
 
         var transactionVm = new TransactionViewModel
         {
@@ -109,7 +109,7 @@ public class TransactionController : Controller
     [HttpGet]
     public async Task<IActionResult> Create()
     {
-        var categories = await _categoryService.GetAllCategoriesAsync();
+        var categories = await _categoryService.GetAllAsync();
 
         var transactionVm = new TransactionViewModel(categories);
 
@@ -122,11 +122,11 @@ public class TransactionController : Controller
         [Bind("TransactionId, Name, Date, Amount, CategoryId")] TransactionViewModel transactionVm
     )
     {
-        var created = await _transactionService.AddTransactionAsync(transactionVm);
+        var created = await _transactionService.AddAsync(transactionVm);
 
         if (created == null)
         {
-            var categories = await _categoryService.GetAllCategoriesAsync();
+            var categories = await _categoryService.GetAllAsync();
             transactionVm.SetCategories(categories);
             ModelState.AddModelError(string.Empty, "Unable to create transaction. Try again.");
             return PartialView("_CreateModalPartial", transactionVm);
@@ -138,8 +138,8 @@ public class TransactionController : Controller
     [HttpGet]
     public async Task<IActionResult> Edit(int id)
     {
-        var transactionToUpdate = await _transactionService.GetTransactionByIdAsync(id);
-        var categories = await _categoryService.GetAllCategoriesAsync();
+        var transactionToUpdate = await _transactionService.GetByIdAsync(id);
+        var categories = await _categoryService.GetAllAsync();
 
         var transactionVm = new TransactionViewModel(transactionToUpdate);
         transactionVm.SetCategories(categories);
@@ -155,7 +155,7 @@ public class TransactionController : Controller
             TransactionViewModel transactionVm
     )
     {
-        var transactionToUpdate = await _transactionService.GetTransactionByIdAsync(id);
+        var transactionToUpdate = await _transactionService.GetByIdAsync(id);
         transactionToUpdate.TransactionId = id;
         transactionToUpdate.Name = transactionVm.Name;
         transactionToUpdate.Amount = transactionVm.Amount;
@@ -163,7 +163,7 @@ public class TransactionController : Controller
         transactionToUpdate.Date = transactionVm.Date;
         transactionToUpdate.CategoryId = transactionVm.CategoryId;
 
-        await _transactionService.UpdateTransactionAsync(id);
+        await _transactionService.UpdateAsync(id);
 
         return CreatedAtAction(
             nameof(Details),
@@ -175,8 +175,8 @@ public class TransactionController : Controller
     [HttpGet]
     public async Task<IActionResult> Delete(int id)
     {
-        var transaction = await _transactionService.GetTransactionByIdAsync(id);
-        var category = await _categoryService.GetCategoryByIdAsync(transaction.CategoryId);
+        var transaction = await _transactionService.GetByIdAsync(id);
+        var category = await _categoryService.GetByIdAsync(transaction.CategoryId);
 
         var transactionVm = new TransactionViewModel
         {
@@ -194,7 +194,7 @@ public class TransactionController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
-        await _transactionService.DeleteTransactionAsync(id);
+        await _transactionService.DeleteAsync(id);
 
         return RedirectToAction(nameof(Index));
     }

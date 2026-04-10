@@ -20,7 +20,7 @@ public class CategoryController : Controller
     // GET: Category
     public async Task<IActionResult> Index(int? pageNumber = 1)
     {
-        var categories = await _categoryService.GetAllCategoriesAsync();
+        var categories = await _categoryService.GetAllAsync();
         var categoryVm = new TransactionCategoryViewModel { Categories = categories };
         categoryVm.SetCategories(categories);
 
@@ -57,7 +57,7 @@ public class CategoryController : Controller
     {
         if (ModelState.IsValid)
         {
-            await _categoryService.AddCategoryAsync(categoryVm);
+            await _categoryService.AddAsync(categoryVm);
 
             return RedirectToAction(nameof(Index));
         }
@@ -68,7 +68,7 @@ public class CategoryController : Controller
     // GET: Category/Edit/5
     public async Task<IActionResult> Edit(int id)
     {
-        var categoryToUpdate = await _categoryService.GetCategoryByIdAsync(id);
+        var categoryToUpdate = await _categoryService.GetByIdAsync(id);
 
         var categoryVm = new CategoryViewModel(categoryToUpdate);
 
@@ -86,10 +86,10 @@ public class CategoryController : Controller
         if (!ModelState.IsValid)
             return PartialView("_EditCategoryModalPartial", categoryVm);
 
-        var categoryToUpdate = await _categoryService.GetCategoryByIdAsync(id);
+        var categoryToUpdate = await _categoryService.GetByIdAsync(id);
         categoryToUpdate.Type = categoryVm.Type;
 
-        await _categoryService.UpdateCategoryAsync(id);
+        await _categoryService.UpdateAsync(id);
 
         return CreatedAtAction(
             nameof(Index),
@@ -101,7 +101,7 @@ public class CategoryController : Controller
     // GET: Category/Delete/5
     public async Task<IActionResult> Delete(int id)
     {
-        var category = await _categoryService.GetCategoryByIdAsync(id);
+        var category = await _categoryService.GetByIdAsync(id);
 
         var categoryVm = new CategoryViewModel { Type = category.Type };
 
@@ -114,7 +114,7 @@ public class CategoryController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
-        await _categoryService.DeleteCategoryAsync(id);
+        await _categoryService.DeleteAsync(id);
 
         return RedirectToAction(nameof(Index));
     }

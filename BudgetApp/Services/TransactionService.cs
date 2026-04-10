@@ -19,7 +19,7 @@ public class TransactionService : ITransactionService
         _logger = logger;
     }
 
-    public async Task<Transaction> AddTransactionAsync(TransactionViewModel transactionVm)
+    public async Task<Transaction> AddAsync(TransactionViewModel transactionVm)
     {
         var transaction = new Transaction
         {
@@ -40,12 +40,12 @@ public class TransactionService : ITransactionService
         return transaction;
     }
 
-    public async Task<List<Transaction>> GetAllTransactionsAsync()
+    public async Task<List<Transaction>> GetAllAsync()
     {
         return await _transactionRepository.GetAllTransactionsAsync();
     }
 
-    public async Task<Transaction> GetTransactionByIdAsync(int id)
+    public async Task<Transaction> GetByIdAsync(int id)
     {
         var transaction = await _transactionRepository.GetTransactionByIdAsync(id);
         _logger.LogInformation(
@@ -56,9 +56,9 @@ public class TransactionService : ITransactionService
         return transaction;
     }
 
-    public async Task<Transaction> UpdateTransactionAsync(int id)
+    public async Task<Transaction> UpdateAsync(int id)
     {
-        var transaction = await GetTransactionByIdAsync(id);
+        var transaction = await GetByIdAsync(id);
 
         await _transactionRepository.UpdateTransactionAsync(transaction);
         _logger.LogInformation(
@@ -69,7 +69,7 @@ public class TransactionService : ITransactionService
         return transaction;
     }
 
-    public async Task DeleteTransactionAsync(int id)
+    public async Task DeleteAsync(int id)
     {
         await _transactionRepository.DeleteTransactionAsync(id);
         _logger.LogInformation("Transaction with ID: {TransactionId} deleted.", id);
