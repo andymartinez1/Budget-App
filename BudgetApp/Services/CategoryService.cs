@@ -18,10 +18,10 @@ public class CategoryService : ICategoryService
 
     public async Task<Category> AddAsync(CategoryViewModel categoryVm)
     {
-        var category = new Category { Type = categoryVm.Type };
+        var category = new Category { Name = categoryVm.Type };
 
         await _categoryRepository.AddCategoryAsync(category);
-        _logger.LogInformation("Category '{Type}' created.", category.Type);
+        _logger.LogInformation("Category '{Name}' created.", category.Name);
 
         return category;
     }
@@ -34,7 +34,7 @@ public class CategoryService : ICategoryService
     public async Task<Category> GetByIdAsync(int id)
     {
         var category = await _categoryRepository.GetCategoryByIdAsync(id);
-        _logger.LogInformation("Category with ID: {CategoryId} retrieved.", category.CategoryId);
+        _logger.LogInformation("Category with ID: {CategoryId} retrieved.", category.Id);
 
         return category;
     }
@@ -44,7 +44,7 @@ public class CategoryService : ICategoryService
         var category = await GetByIdAsync(id);
 
         await _categoryRepository.UpdateCategoryAsync(category);
-        _logger.LogInformation("Category with ID: {CategoryId} updated.", category.CategoryId);
+        _logger.LogInformation("Category with ID: {CategoryId} updated.", category.Id);
 
         return category;
     }

@@ -40,7 +40,7 @@ public class TransactionController : Controller
             transactions = transactions
                 .Where(t =>
                     t.CategoryId.ToString() == filterCategory
-                    || (t.Category != null && t.Category.Type == filterCategory)
+                    || (t.Category != null && t.Category.Name == filterCategory)
                 )
                 .ToList();
 
@@ -98,7 +98,7 @@ public class TransactionController : Controller
         var transactionVm = new TransactionViewModel
         {
             Amount = transaction.Amount,
-            CategoryType = category.Type,
+            CategoryType = category.Name,
             Date = transaction.Date,
             Name = transaction.Name,
         };
@@ -156,7 +156,7 @@ public class TransactionController : Controller
     )
     {
         var transactionToUpdate = await _transactionService.GetByIdAsync(id);
-        transactionToUpdate.TransactionId = id;
+        transactionToUpdate.Id = id;
         transactionToUpdate.Name = transactionVm.Name;
         transactionToUpdate.Amount = transactionVm.Amount;
         transactionToUpdate.Category = transactionVm.Category;
@@ -167,7 +167,7 @@ public class TransactionController : Controller
 
         return CreatedAtAction(
             nameof(Details),
-            new { id = transactionToUpdate.TransactionId },
+            new { id = transactionToUpdate.Id },
             transactionToUpdate
         );
     }
@@ -181,7 +181,7 @@ public class TransactionController : Controller
         var transactionVm = new TransactionViewModel
         {
             Amount = transaction.Amount,
-            CategoryType = category.Type,
+            CategoryType = category.Name,
             Date = transaction.Date,
             Name = transaction.Name,
         };

@@ -5,20 +5,18 @@ namespace BudgetApp.Models.ViewModels;
 
 public class TransactionViewModel
 {
-    public TransactionViewModel()
-    {
-    }
+    public TransactionViewModel() { }
 
     public TransactionViewModel(List<Category> categories)
     {
         Categories = categories
-            .Select(c => new SelectListItem { Value = c.CategoryId.ToString(), Text = c.Type })
+            .Select(c => new SelectListItem { Value = c.Id.ToString(), Text = c.Name })
             .ToList();
     }
 
     public TransactionViewModel(Transaction transaction)
     {
-        TransactionId = transaction.TransactionId;
+        TransactionId = transaction.Id;
         Date = transaction.Date;
         Name = transaction.Name;
         Amount = transaction.Amount;
@@ -38,7 +36,8 @@ public class TransactionViewModel
     [Required]
     public decimal? Amount { get; set; }
 
-    [Display(Name = "Category")] public int CategoryId { get; set; }
+    [Display(Name = "Category")]
+    public int CategoryId { get; set; }
 
     public string CategoryType { get; set; }
 
@@ -49,7 +48,7 @@ public class TransactionViewModel
     public void SetCategories(List<Category> categories)
     {
         Categories = categories
-            .Select(c => new SelectListItem { Value = c.CategoryId.ToString(), Text = c.Type })
+            .Select(c => new SelectListItem { Value = c.Id.ToString(), Text = c.Name })
             .ToList();
     }
 }

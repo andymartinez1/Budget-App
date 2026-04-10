@@ -11,9 +11,11 @@ public class TransactionCategoryViewModel
 
     public IEnumerable<SelectListItem> CategoriesSelectList { get; set; }
 
-    [Display(Name = "Search")] public string? SearchName { get; set; }
+    [Display(Name = "Search")]
+    public string? SearchName { get; set; }
 
-    [Display(Name = "Category")] public string? FilterCategory { get; set; }
+    [Display(Name = "Category")]
+    public string? FilterCategory { get; set; }
 
     [DataType(DataType.Date)]
     [Display(Name = "Start Date")]
@@ -36,7 +38,7 @@ public class TransactionCategoryViewModel
     public void SetCategories(List<Category> categories)
     {
         CategoriesSelectList = categories
-            .Select(c => new SelectListItem { Value = c.CategoryId.ToString(), Text = c.Type })
+            .Select(c => new SelectListItem { Value = c.Id.ToString(), Text = c.Name })
             .ToList();
     }
 }

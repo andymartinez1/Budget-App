@@ -31,18 +31,18 @@ public static class SeedDatabase
             );
 
             context.Categories.AddRange(
-                new Category { Type = "Income" },
-                new Category { Type = "Housing" },
-                new Category { Type = "Utilities" },
-                new Category { Type = "Food" },
-                new Category { Type = "Gift" },
-                new Category { Type = "Donation" },
-                new Category { Type = "Taxes" },
-                new Category { Type = "Transportation" },
-                new Category { Type = "Healthcare" },
-                new Category { Type = "Entertainment" },
-                new Category { Type = "Internal Transfer" },
-                new Category { Type = "Other" }
+                new Category { Name = "Income" },
+                new Category { Name = "Housing" },
+                new Category { Name = "Utilities" },
+                new Category { Name = "Food" },
+                new Category { Name = "Gift" },
+                new Category { Name = "Donation" },
+                new Category { Name = "Taxes" },
+                new Category { Name = "Transportation" },
+                new Category { Name = "Healthcare" },
+                new Category { Name = "Entertainment" },
+                new Category { Name = "Internal Transfer" },
+                new Category { Name = "Other" }
             );
 
             context.Transactions.AddRange(

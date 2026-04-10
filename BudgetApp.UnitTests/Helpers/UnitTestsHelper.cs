@@ -49,7 +49,7 @@ public class UnitTestsHelper
 
     internal static Category GetTestCategory()
     {
-        var category = new Category { CategoryId = 42, Type = "Sample" };
+        var category = new Category { Id = 42, Name = "Sample" };
         return category;
     }
 
@@ -57,7 +57,7 @@ public class UnitTestsHelper
     {
         var transaction = new Transaction
         {
-            TransactionId = 1,
+            Id = 1,
             CategoryId = 42,
             Amount = 100m,
             Date = DateTime.UtcNow,
@@ -73,9 +73,9 @@ public class UnitTestsHelper
 
         var transactionVm = new TransactionViewModel
         {
-            TransactionId = transaction.TransactionId,
+            TransactionId = transaction.Id,
             Amount = transaction.Amount,
-            CategoryType = category.Type,
+            CategoryType = category.Name,
             Date = transaction.Date,
             Name = transaction.Name,
         };

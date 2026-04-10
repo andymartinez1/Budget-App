@@ -16,15 +16,15 @@ public class CategoryControllerTests
         var category = UnitTestsHelper.GetTestCategory();
         var categoryVm = UnitTestsHelper.GetCategoryViewModel();
 
-        catMock.Setup(s => s.GetByIdAsync(category.CategoryId)).ReturnsAsync(category);
+        catMock.Setup(s => s.GetByIdAsync(category.Id)).ReturnsAsync(category);
 
         // Act
-        var result = await controller.Edit(category.CategoryId, categoryVm);
+        var result = await controller.Edit(category.Id, categoryVm);
 
         // Assert
         var ok = Assert.IsType<CreatedAtActionResult>(result);
         var returned = Assert.IsType<Category>(ok.Value);
-        Assert.Equal(categoryVm.Type, returned.Type);
-        Mock.Get(catMock.Object).Verify(s => s.UpdateAsync(category.CategoryId), Times.Once);
+        Assert.Equal(categoryVm.Type, returned.Name);
+        Mock.Get(catMock.Object).Verify(s => s.UpdateAsync(category.Id), Times.Once);
     }
 }

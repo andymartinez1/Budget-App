@@ -48,10 +48,7 @@ public class TransactionService : ITransactionService
     public async Task<Transaction> GetByIdAsync(int id)
     {
         var transaction = await _transactionRepository.GetTransactionByIdAsync(id);
-        _logger.LogInformation(
-            "Transaction with ID: {TransactionId} retrieved.",
-            transaction.TransactionId
-        );
+        _logger.LogInformation("Transaction with ID: {TransactionId} retrieved.", transaction.Id);
 
         return transaction;
     }
@@ -61,10 +58,7 @@ public class TransactionService : ITransactionService
         var transaction = await GetByIdAsync(id);
 
         await _transactionRepository.UpdateTransactionAsync(transaction);
-        _logger.LogInformation(
-            "Transaction with ID: {TransactionId} updated.",
-            transaction.TransactionId
-        );
+        _logger.LogInformation("Transaction with ID: {TransactionId} updated.", transaction.Id);
 
         return transaction;
     }

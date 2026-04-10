@@ -53,7 +53,7 @@ public class CategoryController : Controller
     // POST: Category/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("CategoryId,Type")] CategoryViewModel categoryVm)
+    public async Task<IActionResult> Create([Bind("CategoryId,Name")] CategoryViewModel categoryVm)
     {
         if (ModelState.IsValid)
         {
@@ -80,22 +80,18 @@ public class CategoryController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(
         int id,
-        [Bind("CategoryId,Type")] CategoryViewModel categoryVm
+        [Bind("CategoryId,Name")] CategoryViewModel categoryVm
     )
     {
         if (!ModelState.IsValid)
             return PartialView("_EditCategoryModalPartial", categoryVm);
 
         var categoryToUpdate = await _categoryService.GetByIdAsync(id);
-        categoryToUpdate.Type = categoryVm.Type;
+        categoryToUpdate.Name = categoryVm.Type;
 
         await _categoryService.UpdateAsync(id);
 
-        return CreatedAtAction(
-            nameof(Index),
-            new { id = categoryToUpdate.CategoryId },
-            categoryToUpdate
-        );
+        return CreatedAtAction(nameof(Index), new { id = categoryToUpdate.Id }, categoryToUpdate);
     }
 
     // GET: Category/Delete/5
@@ -103,7 +99,7 @@ public class CategoryController : Controller
     {
         var category = await _categoryService.GetByIdAsync(id);
 
-        var categoryVm = new CategoryViewModel { Type = category.Type };
+        var categoryVm = new CategoryViewModel { Type = category.Name };
 
         return PartialView("_DeleteCategoryModalPartial", categoryVm);
     }

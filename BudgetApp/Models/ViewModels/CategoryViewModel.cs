@@ -4,14 +4,12 @@ public class CategoryViewModel
 {
     public CategoryViewModel(Category category)
     {
-        CategoryId = category.CategoryId;
-        Type = category.Type;
+        CategoryId = category.Id;
+        Type = category.Name;
         Transactions = [];
     }
 
-    public CategoryViewModel()
-    {
-    }
+    public CategoryViewModel() { }
 
     public int CategoryId { get; set; }
 
