@@ -1,0 +1,159 @@
+@model TransactionCategoryViewModel
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var filterCategory = Model?.FilterCategory ?? "";
+    var searchString = Model?.SearchName ?? "";
+    var startDate = Model?.SearchStartDate ?? "";
+    var endDate = Model?.SearchEndDate ?? "";
+
+//Pagination
+    var current = ViewBag.CurrentPage as int? ?? 1;
+    var total = ViewBag.TotalPages as int? ?? 1;
+    var prevDisabled = current <= 1 ? "disabled" : "";
+    var nextDisabled = current >= total ? "disabled" : "";
+    var prevPage = Math.Max(1, current - 1);
+    var nextPage = Math.Min(total, current + 1);
+
+    string UrlFor(int page)
+    {
+        return Url.Action("Index", "Transaction", new { filterCategory, searchString, startDate, endDate, pageNumber = page });
+    }
+
+    var prevUrl = UrlFor(prevPage);
+    var nextUrl = UrlFor(nextPage);
+}
+
+<div id="indexPage">
+    <h1>Transaction History</h1>
+
+    <form asp-controller="Transaction" asp-action="Index" method="get">
+        <div class="row g-2 align-items-end">
+            <div class="col-auto">
+                <label class="form-label">Category</label>
+                <select asp-for="FilterCategory" asp-items="Model.CategoriesSelectList" class="form-select">
+                    <option value="">All Categories</option>
+                </select>
+            </div>
+
+            <div class="col-auto">
+                <label class="form-label">From</label>
+                <input type="date" name="startDate" value="@startDate" class="form-control"/>
+            </div>
+
+            <div class="col-auto">
+                <label class="form-label">To</label>
+                <input type="date" name="endDate" value="@endDate" class="form-control"/>
+            </div>
+
+            <div class="col-auto">
+                <label class="form-label">Search</label>
+                <input type="text" name="searchString" value="@searchString" class="form-control"
+                       placeholder="Search transaction name"/>
+            </div>
+
+            <div class="col-auto">
+                <input type="submit" value="Filter" class="btn btn-primary"/>
+                <a href="@Url.Action("Index", "Transaction")" class="btn btn-secondary">Reset</a>
+            </div>
+            <div class="col-auto ms-auto">
+                <button type="button" class="btn btn-primary" data-toggle="create-transaction-modal"
+                        data-bs-target="#createTransactionModal"
+                        data-url="@Url.Action("Create", "Transaction")">Add Transaction
+                </button>
+            </div>
+        </div>
+    </form>
+    <br/>
+
+    <table class="table table-hover table-striped table-bordered rounded-3 overflow-hidden">
+        <thead class="text-center">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Transactions.FirstOrDefault().Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Transactions.FirstOrDefault().Amount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Transactions.FirstOrDefault().Category)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Transactions.FirstOrDefault().Date)
+            </th>
+            <th style="width: 15%">
+                Actions
+            </th>
+        </tr>
+        </thead>
+        <tbody class="text-center">
+        @foreach (var transaction in Model.Transactions)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => transaction.Name)
+                </td>
+                <td class="@(transaction.Amount > 0 ? "text-success" : "text-danger")">
+                    @Html.DisplayFor(modelItem => transaction.Amount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => transaction.Category.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => transaction.Date)
+                </td>
+                <td>
+                    <button class="btn btn-info" data-toggle="edit-transaction-modal"
+                            data-bs-target="#editTransactionModal"
+                            data-url="@Url.Action("Edit", "Transaction", new { id = transaction.Id })"><i
+                            class="bi bi-pencil-square"></i>
+                    </button>
+                    <button class="btn btn-success" data-toggle="transaction-detail-modal" data-bs-target="#detailModal"
+                            data-url="@Url.Action("Details", "Transaction", new { id = transaction.Id })"><i
+                            class="bi bi-info-circle"></i>
+                    </button>
+                    <button class="btn btn-danger" data-toggle="delete-transaction-modal" data-bs-target="#deleteModal"
+                            data-url="@Url.Action("Delete", "Transaction", new { id = transaction.Id })"><i
+                            class="bi bi-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
+    @if (total > 1)
+    {
+        <nav class="d-flex justify-content-center align-items-center" aria-label="Transactions pagination">
+            <ul class="pagination">
+                <li class="page-item @prevDisabled">
+                    <a class="page-link" href="@prevUrl">Previous</a>
+                </li>
+
+                @for (var i = 1; i <= total; i++)
+                {
+                    var pageUrl = UrlFor(i);
+                    var active = i == current ? "active" : "";
+                    <li class="page-item @active">
+                        <a class="page-link" href="@pageUrl">@i</a>
+                    </li>
+                }
+
+                <li class="page-item @nextDisabled">
+                    <a class="page-link" href="@nextUrl">Next</a>
+                </li>
+            </ul>
+        </nav>
+    }
+</div>
+
+<div id="createTransactionModalPlaceholder"></div>
+<div id="detailTransactionModalPlaceholder"></div>
+<div id="editTransactionModalPlaceholder"></div>
+<div id="deleteTransactionModalPlaceholder"></div>
+
+@section Scripts {
+
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

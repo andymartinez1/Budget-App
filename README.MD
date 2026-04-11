@@ -6,7 +6,7 @@ categorizing spending patterns, and gaining insights into their money flow. Whet
 monitoring income sources, or analyzing spending habits, this app provides the tools you need to maintain financial
 awareness and make informed decisions about your budget.
 
-![home.png](BudgetApp/docs/images/home.png)
+![home.png](/docs/images/home.png)
 
 ## Features
 

@@ -1,0 +1,18 @@
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace BudgetApp.Entities;
+
+public class Transaction : BaseEntity
+{
+    [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy HH:mm}", ApplyFormatInEditMode = true)]
+    [DataType(DataType.Date)]
+    public DateTime Date { get; set; } = DateTime.Now;
+
+    [Column(TypeName = "decimal(18, 2)")]
+    public decimal? Amount { get; set; }
+
+    public int CategoryId { get; set; }
+
+    public Category Category { get; set; }
+}

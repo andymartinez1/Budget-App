@@ -1,10 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetApp", "BudgetApp\BudgetApp.csproj", "{DC7D002F-8D14-445A-81F0-E7731B6DDCC1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetApp.Web", "src\BudgetApp.Web\BudgetApp.Web.csproj", "{DC7D002F-8D14-445A-81F0-E7731B6DDCC1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetApp.UnitTests", "BudgetApp.UnitTests\BudgetApp.UnitTests.csproj", "{B76AF43F-3A4C-4F29-B4A3-9AF923423BAE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetApp.UnitTests", "tests\BudgetApp.UnitTests\BudgetApp.UnitTests.csproj", "{B76AF43F-3A4C-4F29-B4A3-9AF923423BAE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetApp.IntegrationTests", "BudgetApp.IntegrationTests\BudgetApp.IntegrationTests.csproj", "{F5073C0F-918E-40F6-B67C-402557A446B4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetApp.IntegrationTests", "tests\BudgetApp.IntegrationTests\BudgetApp.IntegrationTests.csproj", "{F5073C0F-918E-40F6-B67C-402557A446B4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetApp.Services", "src\BudgetApp.Services\BudgetApp.Services.csproj", "{D13EFB69-18AB-4FD4-9D13-14A01D27E437}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetApp.ServiceContracts", "src\BudgetApp.ServiceContracts\BudgetApp.ServiceContracts.csproj", "{8280D6B3-AE71-4ADE-9F7B-8DCE575291C3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetApp.Entities", "src\BudgetApp.Entities\BudgetApp.Entities.csproj", "{270680A2-B892-4352-9F7D-EB06D0790F86}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetApp.Data", "src\BudgetApp.Data\BudgetApp.Data.csproj", "{63BE3D0E-9C8A-4691-93D0-D18F7C8D02FC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,5 +32,21 @@ Global
 		{F5073C0F-918E-40F6-B67C-402557A446B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F5073C0F-918E-40F6-B67C-402557A446B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F5073C0F-918E-40F6-B67C-402557A446B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D13EFB69-18AB-4FD4-9D13-14A01D27E437}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D13EFB69-18AB-4FD4-9D13-14A01D27E437}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D13EFB69-18AB-4FD4-9D13-14A01D27E437}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D13EFB69-18AB-4FD4-9D13-14A01D27E437}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8280D6B3-AE71-4ADE-9F7B-8DCE575291C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8280D6B3-AE71-4ADE-9F7B-8DCE575291C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8280D6B3-AE71-4ADE-9F7B-8DCE575291C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8280D6B3-AE71-4ADE-9F7B-8DCE575291C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{270680A2-B892-4352-9F7D-EB06D0790F86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{270680A2-B892-4352-9F7D-EB06D0790F86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{270680A2-B892-4352-9F7D-EB06D0790F86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{270680A2-B892-4352-9F7D-EB06D0790F86}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63BE3D0E-9C8A-4691-93D0-D18F7C8D02FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63BE3D0E-9C8A-4691-93D0-D18F7C8D02FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63BE3D0E-9C8A-4691-93D0-D18F7C8D02FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63BE3D0E-9C8A-4691-93D0-D18F7C8D02FC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
