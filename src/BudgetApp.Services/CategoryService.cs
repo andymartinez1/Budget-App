@@ -1,5 +1,7 @@
 ﻿using BudgetApp.Entities;
+using BudgetApp.Models;
 using BudgetApp.ServiceContracts;
+using Microsoft.Extensions.Logging;
 
 namespace BudgetApp.Services;
 

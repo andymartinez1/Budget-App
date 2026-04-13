@@ -1,4 +1,6 @@
-﻿using BudgetApp.UnitTests.Helpers;
+﻿using BudgetApp.Entities;
+using BudgetApp.UnitTests.Helpers;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
 

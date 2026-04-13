@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetApp.Entities", "src\B
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetApp.Data", "src\BudgetApp.Data\BudgetApp.Data.csproj", "{63BE3D0E-9C8A-4691-93D0-D18F7C8D02FC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetApp.Models", "src\BudgetApp.Models\BudgetApp.Models.csproj", "{88C869B9-3CA8-493B-B9A5-5F7D1A77FE49}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,5 +50,9 @@ Global
 		{63BE3D0E-9C8A-4691-93D0-D18F7C8D02FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{63BE3D0E-9C8A-4691-93D0-D18F7C8D02FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{63BE3D0E-9C8A-4691-93D0-D18F7C8D02FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88C869B9-3CA8-493B-B9A5-5F7D1A77FE49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88C869B9-3CA8-493B-B9A5-5F7D1A77FE49}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88C869B9-3CA8-493B-B9A5-5F7D1A77FE49}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88C869B9-3CA8-493B-B9A5-5F7D1A77FE49}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

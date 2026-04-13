@@ -1,4 +1,5 @@
 ﻿using BudgetApp.Entities;
+using BudgetApp.Models;
 
 namespace BudgetApp.ServiceContracts;
 

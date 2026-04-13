@@ -5,8 +5,6 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BudgetApp.Data\BudgetApp.Data.csproj" />
     <ProjectReference Include="..\BudgetApp.Entities\BudgetApp.Entities.csproj" />
-    <ProjectReference Include="..\BudgetApp.Models\BudgetApp.Models.csproj" />
   </ItemGroup>
 </Project>
