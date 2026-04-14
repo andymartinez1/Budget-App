@@ -1,6 +1,7 @@
 ﻿using BudgetApp.Controllers;
 using BudgetApp.Entities;
 using BudgetApp.Models;
+using BudgetApp.ServiceContracts.DTO;
 using BudgetApp.UnitTests.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -60,7 +61,7 @@ public class TransactionControllerTests
         var (controller, txMock, catMock, _) =
             UnitTestsHelper.CreateTransactionControllerWithMocks();
 
-        txMock.Setup(s => s.DeleteAsync(9)).Returns(Task.CompletedTask).Verifiable();
+        txMock.Setup(s => s.DeleteAsync(9)).ReturnsAsync(DeleteResult.Success()).Verifiable();
 
         var result = await controller.DeleteConfirmed(9);
 

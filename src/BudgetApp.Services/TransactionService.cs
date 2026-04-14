@@ -1,20 +1,22 @@
-﻿using BudgetApp.Entities;
+﻿using BudgetApp.Data;
+using BudgetApp.Entities;
+using BudgetApp.Models;
 using BudgetApp.ServiceContracts;
+using BudgetApp.ServiceContracts.DTO;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace BudgetApp.Services;
 
 public class TransactionService : ITransactionService
 {
+    private readonly BudgetDbContext _context;
     private readonly ILogger<TransactionService> _logger;
-    private readonly ITransactionRepository _transactionRepository;
 
-    public TransactionService(
-        ITransactionRepository transactionRepository,
-        ILogger<TransactionService> logger
-    )
+    public TransactionService(ILogger<TransactionService> logger, BudgetDbContext context)
     {
-        _transactionRepository = transactionRepository;
         _logger = logger;
+        _context = context;
     }
 
     public async Task<Transaction> AddAsync(TransactionViewModel transactionVm)
@@ -27,7 +29,23 @@ public class TransactionService : ITransactionService
             CategoryId = transactionVm.CategoryId,
         };
 
-        await _transactionRepository.AddTransactionAsync(transaction);
+        await _context.Transactions.AddAsync(transaction);
+
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException e)
+        {
+            _logger.LogWarning(e, "Concurrency conflict while adding transaction.");
+            return transaction;
+        }
+        catch (DbUpdateException e)
+        {
+            _logger.LogError(e, "Database update failed while adding transaction.");
+            return transaction;
+        }
+
         _logger.LogInformation(
             "Transaction '{Name}' created. Amount: ${Amount} on {Date}.",
             transaction.Name,
@@ -40,12 +58,19 @@ public class TransactionService : ITransactionService
 
     public async Task<List<Transaction>> GetAllAsync()
     {
-        return await _transactionRepository.GetAllTransactionsAsync();
+        return await _context.Transactions.Include(t => t.Category).AsNoTracking().ToListAsync();
     }
 
     public async Task<Transaction> GetByIdAsync(int id)
     {
-        var transaction = await _transactionRepository.GetTransactionByIdAsync(id);
+        var transaction = await _context
+            .Transactions.Include(t => t.Category)
+            .AsNoTracking()
+            .SingleOrDefaultAsync(t => t.Id == id);
+
+        if (transaction is null)
+            return null;
+
         _logger.LogInformation("Transaction with ID: {TransactionId} retrieved.", transaction.Id);
 
         return transaction;
@@ -53,17 +78,80 @@ public class TransactionService : ITransactionService
 
     public async Task<Transaction> UpdateAsync(int id)
     {
-        var transaction = await GetByIdAsync(id);
+        var transaction = await _context.Transactions.FindAsync(id);
 
-        await _transactionRepository.UpdateTransactionAsync(transaction);
+        if (transaction is null)
+        {
+            _logger.LogWarning(
+                "Update requested for transaction {TransactionId}, but it was not found.",
+                id
+            );
+            return null;
+        }
+
+        _context.Transactions.Update(transaction);
+
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException e)
+        {
+            _logger.LogWarning(e, "Concurrency conflict while updating transaction.");
+            return transaction;
+        }
+        catch (DbUpdateException e)
+        {
+            _logger.LogError(e, "Database update failed while updating transaction.");
+            return transaction;
+        }
+
         _logger.LogInformation("Transaction with ID: {TransactionId} updated.", transaction.Id);
 
         return transaction;
     }
 
-    public async Task DeleteAsync(int id)
+    public async Task<DeleteResult> DeleteAsync(int id)
     {
-        await _transactionRepository.DeleteTransactionAsync(id);
+        var transaction = await _context.Transactions.FindAsync(id);
+
+        if (transaction is null)
+        {
+            _logger.LogWarning(
+                "Delete requested for transaction {TransactionId}, but it was not found.",
+                id
+            );
+            return DeleteResult.NotFoundResult("Transaction not found.");
+        }
+
+        _context.Transactions.Remove(transaction);
+
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException e)
+        {
+            _logger.LogWarning(
+                e,
+                "Concurrency conflict while deleting transaction {TransactionId}.",
+                id
+            );
+            return DeleteResult.ConflictResult(
+                "The transaction was modified or deleted by another process."
+            );
+        }
+        catch (DbUpdateException e)
+        {
+            _logger.LogError(
+                e,
+                "Database update failed while deleting transaction {TransactionId}.",
+                id
+            );
+            return DeleteResult.Failure("Unable to delete the transaction.");
+        }
+
         _logger.LogInformation("Transaction with ID: {TransactionId} deleted.", id);
+        return DeleteResult.Success();
     }
 }
