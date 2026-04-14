@@ -1,4 +1,6 @@
-﻿namespace BudgetApp.ServiceContracts;
+﻿using BudgetApp.ServiceContracts.DTO;
+
+namespace BudgetApp.ServiceContracts;
 
 public interface ICrudService<TModel, TRequest, TKey>
     where TKey : notnull
@@ -11,5 +13,5 @@ public interface ICrudService<TModel, TRequest, TKey>
 
     public Task<TModel> UpdateAsync(TKey id);
 
-    public Task DeleteAsync(TKey id);
+    public Task<DeleteResult> DeleteAsync(TKey id);
 }
