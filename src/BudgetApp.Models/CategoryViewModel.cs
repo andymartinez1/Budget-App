@@ -7,7 +7,7 @@ public class CategoryViewModel
     public CategoryViewModel(Category category)
     {
         CategoryId = category.Id;
-        Type = category.Name;
+        Name = category.Name;
         Transactions = [];
     }
 
@@ -15,7 +15,7 @@ public class CategoryViewModel
 
     public int CategoryId { get; set; }
 
-    public string Type { get; set; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
 
     public List<TransactionViewModel>? Transactions { get; set; }
 }

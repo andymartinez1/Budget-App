@@ -11,7 +11,7 @@ public interface ICrudService<TModel, TRequest, TKey>
 
     public Task<TModel> GetByIdAsync(TKey id);
 
-    public Task<TModel> UpdateAsync(TKey id);
+    public Task<TModel> UpdateAsync(TKey id, TRequest request);
 
     public Task<DeleteResult> DeleteAsync(TKey id);
 }

@@ -163,7 +163,7 @@ public class TransactionController : Controller
         transactionToUpdate.Date = transactionVm.Date;
         transactionToUpdate.CategoryId = transactionVm.CategoryId;
 
-        await _transactionService.UpdateAsync(id);
+        await _transactionService.UpdateAsync(id, transactionVm);
 
         return CreatedAtAction(
             nameof(Details),

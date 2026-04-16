@@ -70,13 +70,11 @@ public class TransactionService : ITransactionService
 
         if (transaction is null)
             return null;
-
-        _logger.LogInformation("Transaction with ID: {TransactionId} retrieved.", transaction.Id);
-
+        
         return transaction;
     }
 
-    public async Task<Transaction> UpdateAsync(int id)
+    public async Task<Transaction> UpdateAsync(int id, TransactionViewModel vm)
     {
         var transaction = await _context.Transactions.FindAsync(id);
 
@@ -88,6 +86,11 @@ public class TransactionService : ITransactionService
             );
             return null;
         }
+
+        transaction.Name = vm.Name;
+        transaction.Date = vm.Date;
+        transaction.Amount = vm.Amount;
+        transaction.CategoryId = vm.CategoryId;
 
         _context.Transactions.Update(transaction);
 

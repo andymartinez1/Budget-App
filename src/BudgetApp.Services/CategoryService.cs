@@ -21,7 +21,7 @@ public class CategoryService : ICategoryService
 
     public async Task<Category> AddAsync(CategoryViewModel categoryVm)
     {
-        var category = new Category { Name = categoryVm.Type };
+        var category = new Category { Name = categoryVm.Name };
 
         await _context.Categories.AddAsync(category);
 
@@ -61,7 +61,7 @@ public class CategoryService : ICategoryService
         return category;
     }
 
-    public async Task<Category> UpdateAsync(int id)
+    public async Task<Category> UpdateAsync(int id, CategoryViewModel vm)
     {
         var category = await _context.Categories.FindAsync(id);
 
@@ -73,6 +73,8 @@ public class CategoryService : ICategoryService
             );
             return null;
         }
+
+        category.Name = vm.Name;
 
         _context.Categories.Update(category);
 

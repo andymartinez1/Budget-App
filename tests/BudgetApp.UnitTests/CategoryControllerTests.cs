@@ -24,7 +24,7 @@ public class CategoryControllerTests
         // Assert
         var ok = Assert.IsType<CreatedAtActionResult>(result);
         var returned = Assert.IsType<Category>(ok.Value);
-        Assert.Equal(categoryVm.Type, returned.Name);
+        Assert.Equal(categoryVm.Name, returned.Name);
         Mock.Get(catMock.Object).Verify(s => s.UpdateAsync(category.Id), Times.Once);
     }
 }

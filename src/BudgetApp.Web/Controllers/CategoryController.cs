@@ -88,9 +88,9 @@ public class CategoryController : Controller
             return PartialView("_EditCategoryModalPartial", categoryVm);
 
         var categoryToUpdate = await _categoryService.GetByIdAsync(id);
-        categoryToUpdate.Name = categoryVm.Type;
+        categoryToUpdate.Name = categoryVm.Name;
 
-        await _categoryService.UpdateAsync(id);
+        await _categoryService.UpdateAsync(id, categoryVm);
 
         return CreatedAtAction(nameof(Index), new { id = categoryToUpdate.Id }, categoryToUpdate);
     }
@@ -100,7 +100,7 @@ public class CategoryController : Controller
     {
         var category = await _categoryService.GetByIdAsync(id);
 
-        var categoryVm = new CategoryViewModel { Type = category.Name };
+        var categoryVm = new CategoryViewModel { Name = category.Name };
 
         return PartialView("_DeleteCategoryModalPartial", categoryVm);
     }
