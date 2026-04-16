@@ -15,6 +15,13 @@ public static class SeedDatabase
             )
         )
         {
+            context.Database.EnsureCreated();
+
+            if (context.Users.Any())
+            {
+                return;
+            }
+
             var hasher = new PasswordHasher<BudgetUser>();
             context.Users.Add(
                 new BudgetUser
@@ -231,8 +238,6 @@ public static class SeedDatabase
                 }
             );
 
-            context.Database.EnsureDeleted();
-            context.Database.EnsureCreated();
             context.SaveChanges();
         }
     }
