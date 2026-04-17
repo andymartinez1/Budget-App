@@ -1,4 +1,3 @@
-using BudgetApp.Entities;
 using BudgetApp.Models;
 using BudgetApp.ServiceContracts;
 using Microsoft.AspNetCore.Authorization;

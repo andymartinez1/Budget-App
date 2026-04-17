@@ -1,5 +1,4 @@
-﻿using BudgetApp.Controllers;
-using BudgetApp.Entities;
+﻿using BudgetApp.Entities;
 using BudgetApp.Models;
 using BudgetApp.UnitTests.Helpers;
 using Microsoft.AspNetCore.Mvc;
@@ -175,7 +174,7 @@ public class TransactionControllerTests
     {
         // Arrange
         var (controller, txMock, _, _) = UnitTestsHelper.CreateTransactionControllerWithMocks();
-        int transactionId = 1;
+        var transactionId = 1;
 
         // Act
         var result = await controller.DeleteConfirmed(transactionId);

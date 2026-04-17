@@ -7,13 +7,23 @@ public sealed record DeleteResult(
     string? ErrorMessage = null
 )
 {
-    public static DeleteResult Success() => new(true);
+    public static DeleteResult Success()
+    {
+        return new DeleteResult(true);
+    }
 
-    public static DeleteResult NotFoundResult(string? message = null) =>
-        new(false, NotFound: true, ErrorMessage: message);
+    public static DeleteResult NotFoundResult(string? message = null)
+    {
+        return new DeleteResult(false, true, ErrorMessage: message);
+    }
 
-    public static DeleteResult ConflictResult(string? message = null) =>
-        new(false, Conflict: true, ErrorMessage: message);
+    public static DeleteResult ConflictResult(string? message = null)
+    {
+        return new DeleteResult(false, Conflict: true, ErrorMessage: message);
+    }
 
-    public static DeleteResult Failure(string? message = null) => new(false, ErrorMessage: message);
+    public static DeleteResult Failure(string? message = null)
+    {
+        return new DeleteResult(false, ErrorMessage: message);
+    }
 }

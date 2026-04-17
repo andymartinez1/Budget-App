@@ -70,7 +70,7 @@ public class TransactionService : ITransactionService
 
         if (transaction is null)
             return null;
-        
+
         return transaction;
     }
 

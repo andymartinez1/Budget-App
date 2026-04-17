@@ -3,16 +3,27 @@ using BudgetApp.Entities;
 using BudgetApp.ServiceContracts;
 using BudgetApp.Services;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options =>
+{
+    if (builder.Configuration["DisableAntiforgery"] == "true")
+        options.Filters.Add(new IgnoreAntiforgeryTokenAttribute());
+});
 builder.Services.AddHttpLogging();
-builder.Services.AddDbContext<BudgetDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("BudgetDbContext"))
-);
+
+if (builder.Configuration["UseInMemoryDatabase"] == "true")
+    builder.Services.AddDbContext<BudgetDbContext>(options =>
+        options.UseInMemoryDatabase("BudgetAppDb")
+    );
+else
+    builder.Services.AddDbContext<BudgetDbContext>(options =>
+        options.UseSqlServer(builder.Configuration.GetConnectionString("BudgetDbContext"))
+    );
 
 builder
     .Services.AddIdentity<BudgetUser, IdentityRole>(options =>
@@ -58,3 +69,5 @@ app.UseAuthorization();
 app.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}").WithStaticAssets();
 
 app.Run();
+
+public partial class Program { }

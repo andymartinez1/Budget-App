@@ -156,7 +156,7 @@ public class CategoryControllerTests
     {
         // Arrange
         var (controller, catMock, _) = UnitTestsHelper.CreateCategoryControllerWithMocks();
-        int categoryId = 42;
+        var categoryId = 42;
 
         // Act
         var result = await controller.DeleteConfirmed(categoryId);
