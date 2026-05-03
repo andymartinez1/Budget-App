@@ -11,6 +11,7 @@ public class BudgetDbContext : IdentityDbContext<BudgetUser>
 
     public DbSet<Category> Categories { get; set; }
     public DbSet<Transaction> Transactions { get; set; }
+    public DbSet<Log> Logs { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

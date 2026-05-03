@@ -25,6 +25,8 @@ else
         options.UseSqlServer(builder.Configuration.GetConnectionString("BudgetDbContext"))
     );
 
+builder.Services.AddSingleton<ILoggerProvider, DatabaseLoggerProvider>();
+
 builder
     .Services.AddIdentity<BudgetUser, IdentityRole>(options =>
     {

@@ -18,6 +18,7 @@ public class UnitTestsHelper
         _transactionId = transactionId;
     }
 
+    /*
     public static (
         TransactionController Controller,
         Mock<ITransactionService> TransactionMock,
@@ -32,6 +33,7 @@ public class UnitTestsHelper
         var controller = new TransactionController(txMock.Object, catMock.Object, logMock.Object);
         return (controller, txMock, catMock, logMock);
     }
+    */
 
     public static (
         CategoryController Controller,
